@@ -29,7 +29,7 @@ SPLIT_COLORS = {"train": "#1f6fd1", "student_test": "#f28e1c"}
 
 def savefig(fig, name):
     fig.tight_layout()
-    fig.savefig(FIG / name, dpi=130)
+    fig.savefig(FIG / name, dpi=130, bbox_inches="tight")
     plt.close(fig)
     print("  wrote", FIG / name)
 

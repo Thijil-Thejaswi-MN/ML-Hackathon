@@ -1,0 +1,31 @@
+{
+ "model_probs": "lightgbm_tuned",
+ "split": "student_test",
+ "decoder_config": {
+  "beta_m": 2.0,
+  "epsilon": 1e-06,
+  "t_gap_s": 30.0,
+  "v_max_mps": 40.0,
+  "dijkstra_slack_m": 100.0,
+  "backward_penalty": 5.0,
+  "emission_distance_weight": 1.0,
+  "emission_sigma_m": 20.0,
+  "use_calibrated_probs": false
+ },
+ "overall": {
+  "cls_top1": 0.9073068893528183,
+  "hmm_top1": 0.9139874739039666,
+  "cls_top1_reliable": 0.9085872576177285,
+  "hmm_top1_reliable": 0.9152772696388439,
+  "cls_continuity": 0.8019096348152128,
+  "hmm_continuity": 0.8887865577732267,
+  "stitched_continuity": 0.9998730964467004,
+  "cls_arc_f1": 0.8905883467168028,
+  "hmm_arc_f1": 0.9646645145271094,
+  "decode_seconds_total": 1.772,
+  "decode_ms_per_1000_obs": 92.48434237995825
+ },
+ "trips_improved": 7,
+ "trips_worse": 2,
+ "wall_clock_s": 2.1
+}
