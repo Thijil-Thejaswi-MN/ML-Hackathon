@@ -14,6 +14,7 @@ REGISTRY: dict[str, str] = {
     "logreg": "pathsnap.models.logreg:LogRegModel",
     "knn": "pathsnap.models.knn:KNNModel",
     "lightgbm": "pathsnap.models.boosting:LightGBMModel",
+    "hgb": "pathsnap.models.boosting:HGBModel",          # sklearn histogram GBDT (no extra dependency)
     # M3 models
     "gnb": "pathsnap.models.gnb:GNBModel",
     # M1 models

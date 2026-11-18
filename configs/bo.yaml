@@ -1,6 +1,35 @@
-# Bayesian optimisation (owner: M2). Fill the search space BEFORE running; add a justification per entry.
+# Bayesian optimisation (owner: M2). Search spaces written BEFORE running, each with a justification.
+# Method: Optuna TPE (tree-structured Parzen estimator) = sequential model-based (Bayesian) optimisation.
 sampler: tpe
-n_trials: 50
-objective: cv_top1_accuracy   # or cv_macro_f1 / cv_logloss -- decide at G3 and record in docs/DECISIONS.md
+n_startup_trials: 10          # random trials before TPE starts modelling good/bad regions
+n_trials: 40                  # README 3.9 asks for >= 40
+seed: 42
+objective: cv_top1_accuracy   # mean observation-level Top-1 over the 5 frozen group folds (reliable labels); threshold-free
 cv: group_by_trip_frozen_folds
-search_space: {}              # e.g. learning_rate: {type: float, low: 0.01, high: 0.3, log: true, why: "..."}
+train_obs_frac: 0.3           # each trial fits on a seeded 30 % of training OBSERVATIONS (validation folds stay complete)
+                              # -> ~5x cheaper trials; the final tuned model is refit on 100 % (same as untuned)
+pruner: median                # stop a trial early if its running fold-mean is below the median of earlier trials
+enqueue_untuned: true         # trial 0 = the untuned configs/models/<model>.yaml values, so the search starts from the baseline
+
+search_space:
+  lightgbm:
+    learning_rate:     {type: float, low: 0.01, high: 0.3, log: true, why: "step size; log scale because useful values span 30x"}
+    n_estimators:      {type: int, low: 100, high: 1200, step: 50, why: "more trees needed when the learning rate is small"}
+    num_leaves:        {type: int, low: 15, high: 255, log: true, why: "main capacity knob of leaf-wise trees"}
+    min_child_samples: {type: int, low: 10, high: 400, log: true, why: "minimum rows per leaf; regularises noisy labels"}
+    subsample:         {type: float, low: 0.5, high: 1.0, why: "row bagging per tree reduces variance"}
+    colsample_bytree:  {type: float, low: 0.4, high: 1.0, why: "feature subsampling; 37 correlated features"}
+    reg_lambda:        {type: float, low: 0.001, high: 10.0, log: true, why: "L2 on leaf values"}
+    reg_alpha:         {type: float, low: 0.001, high: 5.0, log: true, why: "L1 on leaf values"}
+  hgb:
+    learning_rate:     {type: float, low: 0.02, high: 0.3, log: true, why: "step size"}
+    max_iter:          {type: int, low: 100, high: 800, step: 50, why: "number of boosting rounds"}
+    max_leaf_nodes:    {type: int, low: 15, high: 255, log: true, why: "tree capacity"}
+    min_samples_leaf:  {type: int, low: 10, high: 400, log: true, why: "leaf size regularisation"}
+    l2_regularization: {type: float, low: 0.0001, high: 10.0, log: true, why: "L2 on leaf values"}
+    max_features:      {type: float, low: 0.4, high: 1.0, why: "feature subsampling per split"}
+  extratrees:
+    n_estimators:      {type: int, low: 100, high: 400, step: 50, why: "variance reduction vs training time"}
+    max_depth:         {type: int, low: 8, high: 30, why: "tree capacity / overfitting"}
+    min_samples_leaf:  {type: int, low: 1, high: 50, log: true, why: "smoothness of vote probabilities"}
+    max_features:      {type: float, low: 0.1, high: 0.8, why: "randomness per split (sqrt ~ 0.16)"}
