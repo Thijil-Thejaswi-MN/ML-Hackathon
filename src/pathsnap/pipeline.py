@@ -100,10 +100,17 @@ def predict_trip(trip, bundle) -> PredictionResult:
         timings["route"] = decode_res.timings.get("route", 0.0)
 
         # Classifier only argmax
-        cls_best = feat_df.sort_values("p", ascending=False).groupby("obs_idx").first()
+        cls_best = feat_df.sort_values("p", ascending=False).drop_duplicates("obs_idx")
         classifier_arc_per_obs = np.full(n_obs, -1, dtype=np.int64)
-        for obs_idx, row in cls_best.iterrows():
-            classifier_arc_per_obs[obs_idx] = int(row["arc_id"])
+        classifier_arc_per_obs[cls_best["obs_idx"].to_numpy()] = cls_best["arc_id"].to_numpy()
+
+        # classifier-only route polyline for the UI layer (consecutive duplicates collapsed) [lat, lon]
+        cls_seq = [int(a) for a in classifier_arc_per_obs if a >= 0]
+        cls_seq = [a for i, a in enumerate(cls_seq) if i == 0 or a != cls_seq[i - 1]]
+        classifier_polyline = []
+        if cls_seq:
+            node_ids = [int(arcs[cls_seq[0], 0])] + [int(arcs[a, 1]) for a in cls_seq]
+            classifier_polyline = [[float(nodes[n, 1]), float(nodes[n, 0])] for n in node_ids]
 
         timings["total"] = (time.perf_counter() - t_start) * 1000.0
         return PredictionResult(
@@ -113,7 +120,7 @@ def predict_trip(trip, bundle) -> PredictionResult:
             matched=decode_res.matched,
             route_arcs=decode_res.route_arcs,
             route_polyline=decode_res.route_polyline,
-            classifier_polyline=[],
+            classifier_polyline=classifier_polyline,
             breaks=decode_res.breaks,
             timings_ms=timings,
         )
