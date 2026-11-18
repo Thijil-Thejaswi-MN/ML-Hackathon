@@ -1,0 +1,59 @@
+{
+ "config": {
+  "seed": 42,
+  "paths": {
+   "raw_root": "data/raw/Student folder",
+   "processed": "data/processed",
+   "artifacts": "artifacts",
+   "results": "results"
+  },
+  "splits": {
+   "train": "train",
+   "student_test": "student_test"
+  },
+  "cv": {
+   "n_splits": 5
+  },
+  "projection": "local_per_trip",
+  "candidates": {
+   "radii_m": [
+    50,
+    100,
+    200
+   ],
+   "k_max": 30,
+   "k_min": 3
+  },
+  "features": {
+   "heading_window": 5,
+   "neighbour_window": 5
+  }
+ },
+ "mini": 0,
+ "wall_clock_s": 45.9,
+ "summary": {
+  "train": {
+   "trips": 80,
+   "observations": 208417,
+   "candidate_rows": 2410915,
+   "candidates_per_obs": 11.57,
+   "candidate_miss_rate": 0.0496,
+   "candidate_miss_rate_reliable_labels": 0.0003,
+   "nearest_arc_top1": 0.4916,
+   "label_reliable_frac": 0.8884,
+   "positive_rate": 0.0822
+  },
+  "student_test": {
+   "trips": 10,
+   "observations": 19160,
+   "candidate_rows": 220054,
+   "candidates_per_obs": 11.49,
+   "candidate_miss_rate": 0.001,
+   "candidate_miss_rate_reliable_labels": 0.0,
+   "nearest_arc_top1": 0.5322,
+   "label_reliable_frac": 0.9986,
+   "positive_rate": 0.087
+  }
+ },
+ "n_features": 37
+}
