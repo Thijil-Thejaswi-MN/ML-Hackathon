@@ -149,10 +149,10 @@ def cross_validate(data: Data, model_name: str, params: dict, train_obs_frac: fl
 def _versions():
     import sklearn
     v = {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
-         "scikit-learn": sklearn.__version__}
+         "scikit-learn": str(sklearn.__version__)}
     for mod in ("lightgbm", "torch", "optuna"):
         try:
-            v[mod] = __import__(mod).__version__
+            v[mod] = str(__import__(mod).__version__)   # str(): torch reports a TorchVersion object
         except ImportError:
             pass
     return v
