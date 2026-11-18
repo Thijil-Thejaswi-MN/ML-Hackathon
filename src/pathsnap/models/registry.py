@@ -10,14 +10,15 @@ REGISTRY: dict[str, str] = {
     # M4 models
     "rf": "pathsnap.models.rf:RandomForestCandidateModel",
     "mlp": "pathsnap.models.mlp:MLPCandidateModel",
+    # M1 models
+    "extratrees": "pathsnap.models.trees:ExtraTreesModel",
     # M2 models
     "logreg": "pathsnap.models.logreg:LogRegModel",
     "knn": "pathsnap.models.knn:KNNModel",
     "lightgbm": "pathsnap.models.boosting:LightGBMModel",
+    "hgb": "pathsnap.models.boosting:HGBModel",          # sklearn histogram GBDT (no extra dependency)
     # M3 models
     "gnb": "pathsnap.models.gnb:GNBModel",
-    # M1 models
-    "extratrees": "pathsnap.models.trees:ExtraTreesModel",
 }
 
 

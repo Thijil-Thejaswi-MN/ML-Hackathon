@@ -1,0 +1,31 @@
+model: lightgbm
+tag: lightgbm_tuned
+family: Boosting (LightGBM, leaf-wise GBDT)
+params:
+  n_estimators: 900
+  learning_rate: 0.03932631182849943
+  num_leaves: 80
+  max_depth: -1
+  min_child_samples: 12
+  subsample: 0.7751193012657269
+  subsample_freq: 1
+  colsample_bytree: 0.6726268493275187
+  reg_alpha: 1.596104080788103
+  reg_lambda: 0.03846975354755268
+  is_unbalance: false
+  random_state: 42
+  n_jobs: -1
+seed: 42
+train_obs_frac: 1.0
+training_rows: label_reliable observations only
+features: 37
+scaling: artifacts/scaler.joblib (fit on train)
+n_train_rows_full: 1934576
+versions:
+  python: 3.12.4
+  numpy: 2.5.5
+  pandas: 3.1.1
+  scikit-learn: 1.9.1
+  lightgbm: 4.7.0
+  optuna: 5.1.0
+notes: best params from results/bo/lightgbm/best_params.json

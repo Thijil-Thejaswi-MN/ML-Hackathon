@@ -1,0 +1,4 @@
+{
+ "threshold": 0.45,
+ "chosen_on": "train OOF probabilities, max macro-F1 (frozen group folds)"
+}
