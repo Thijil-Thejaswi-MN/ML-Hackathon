@@ -30,10 +30,12 @@ def load_probs(split: str, tag: str) -> pd.DataFrame:
     cands = load_table(ROOT / f"data/processed/candidates_{split}.parquet")
     src = ROOT / ("results/oof" if split == "train" else "results/preds") / (
         f"{tag}.parquet" if split == "train" else f"student_test_{tag}.parquet")
-    pr = load_table(src)
-    assert len(pr) == len(cands) and (pr["arc_id"].to_numpy() == cands["arc_id"].to_numpy()).all(), \
-        f"{src} does not line up with candidates_{split} - rebuild both from the same 02_build_dataset run"
-    cands["p"] = pr["p"].to_numpy()
+    pr = load_table(src)[["trip_id", "obs_idx", "arc_id", "p"]]
+    pr["trip_id"] = pr["trip_id"].astype(str)
+    # match by key, not by row position: candidate order within an observation can differ between machines
+    # (floating-point ties in distance sorting), while the set of (trip, obs, arc) rows is identical
+    cands = cands.merge(pr, on=["trip_id", "obs_idx", "arc_id"], how="left")
+    assert cands["p"].notna().all(), f"{src} does not cover every candidate of {split} - rebuild both from the same code"
     return cands
 
 

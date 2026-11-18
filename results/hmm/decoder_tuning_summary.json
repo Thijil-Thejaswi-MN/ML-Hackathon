@@ -1,0 +1,60 @@
+{
+ "model_probs": "lightgbm_tuned",
+ "grid": {
+  "beta_m": [
+   0.5,
+   1.0,
+   2.0,
+   5.0,
+   10.0,
+   20.0,
+   50.0
+  ],
+  "emission_distance_weight": [
+   0.0,
+   1.0
+  ]
+ },
+ "objective": "pooled Top-1 on reliable train observations (OOF probs)",
+ "best_config": {
+  "beta_m": 2.0,
+  "epsilon": 1e-06,
+  "t_gap_s": 30.0,
+  "v_max_mps": 40.0,
+  "dijkstra_slack_m": 100.0,
+  "backward_penalty": 5.0,
+  "emission_distance_weight": 1.0,
+  "emission_sigma_m": 20.0,
+  "use_calibrated_probs": false
+ },
+ "best_train_oof": {
+  "beta_m": 2.0,
+  "emission_distance_weight": 1.0,
+  "cls_top1": 0.8125392842234559,
+  "hmm_top1": 0.8166464347917877,
+  "cls_top1_reliable": 0.9106071326337166,
+  "hmm_top1_reliable": 0.9147281378781413,
+  "cls_continuity": 0.7889960453135225,
+  "hmm_continuity": 0.8777361059077146,
+  "stitched_continuity": 0.9974744727110165,
+  "cls_arc_f1": 0.888422476620929,
+  "hmm_arc_f1": 0.9290478977060209,
+  "decode_seconds_total": 21.503999999999998,
+  "decode_ms_per_1000_obs": 103.17776381005386,
+  "seconds": 22.1
+ },
+ "student_test_confirmation": {
+  "cls_top1": 0.9073068893528183,
+  "hmm_top1": 0.9139874739039666,
+  "cls_top1_reliable": 0.9085872576177285,
+  "hmm_top1_reliable": 0.9152772696388439,
+  "cls_continuity": 0.8019096348152128,
+  "hmm_continuity": 0.8887865577732267,
+  "stitched_continuity": 0.9998730964467004,
+  "cls_arc_f1": 0.8905883467168028,
+  "hmm_arc_f1": 0.9646645145271094,
+  "decode_seconds_total": 1.6460000000000001,
+  "decode_ms_per_1000_obs": 85.90814196242172
+ },
+ "wall_clock_s": 305.7
+}
