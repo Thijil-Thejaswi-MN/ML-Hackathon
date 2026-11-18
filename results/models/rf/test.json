@@ -1,0 +1,24 @@
+{
+  "model": "rf",
+  "threshold_used": 0.45,
+  "full_train_time_s": 37.51,
+  "inference_time_ms": 136.65,
+  "ms_per_1000_obs": 7.13,
+  "test_top1": 0.8938,
+  "test_top1_given_hit": 0.8938,
+  "test_macro_f1": 0.9384,
+  "test_log_loss": 0.0469,
+  "test_precision": 0.9035,
+  "test_recall": 0.8717,
+  "test_accuracy": 0.9807,
+  "confusion_matrix": [
+    [
+      199131,
+      1782
+    ],
+    [
+      2456,
+      16685
+    ]
+  ]
+}

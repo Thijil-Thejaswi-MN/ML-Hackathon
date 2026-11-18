@@ -21,10 +21,12 @@ class RandomForestCandidateModel(CandidateModel):
     def __init__(
         self,
         n_estimators: int = 100,
-        max_depth: Optional[int] = 12,
+        max_depth: Optional[int] = 14,
         min_samples_split: int = 5,
-        min_samples_leaf: int = 2,
-        class_weight: str = "balanced_subsample",
+        min_samples_leaf: int = 4,
+        max_samples: Optional[float] = 0.25,
+        bootstrap: bool = True,
+        class_weight: Optional[str] = None,
         random_state: int = 42,
         n_jobs: int = -1,
         **kwargs,
@@ -34,6 +36,8 @@ class RandomForestCandidateModel(CandidateModel):
             "max_depth": max_depth,
             "min_samples_split": min_samples_split,
             "min_samples_leaf": min_samples_leaf,
+            "max_samples": max_samples,
+            "bootstrap": bootstrap,
             "class_weight": class_weight,
             "random_state": random_state,
             "n_jobs": n_jobs,
@@ -51,7 +55,6 @@ class RandomForestCandidateModel(CandidateModel):
         if probs.shape[1] == 2:
             return probs[:, 1]
         elif probs.shape[1] == 1:
-            # Degenerate case (only 0s or 1s in training)
             classes = list(self.clf.classes_)
             if 1 in classes:
                 return np.ones(len(X), dtype=np.float32)

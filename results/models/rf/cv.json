@@ -1,0 +1,48 @@
+{
+  "model": "rf",
+  "n_splits": 5,
+  "best_threshold": 0.45,
+  "mean_train_time_s": 28.19,
+  "folds": [
+    {
+      "fold": 0,
+      "train_time_s": 24.03,
+      "macro_f1": 0.8325,
+      "log_loss": 0.1237,
+      "top1": 0.5039
+    },
+    {
+      "fold": 1,
+      "train_time_s": 27.69,
+      "macro_f1": 0.9221,
+      "log_loss": 0.0641,
+      "top1": 0.8688
+    },
+    {
+      "fold": 2,
+      "train_time_s": 29.62,
+      "macro_f1": 0.9579,
+      "log_loss": 0.0451,
+      "top1": 0.9336
+    },
+    {
+      "fold": 3,
+      "train_time_s": 28.45,
+      "macro_f1": 0.9391,
+      "log_loss": 0.0563,
+      "top1": 0.8217
+    },
+    {
+      "fold": 4,
+      "train_time_s": 31.17,
+      "macro_f1": 0.9555,
+      "log_loss": 0.0435,
+      "top1": 0.9071
+    }
+  ],
+  "oof_macro_f1": 0.9265,
+  "oof_log_loss": 0.074,
+  "oof_top1": 0.807,
+  "macro_f1_std": 0.0463,
+  "top1_std": 0.1562
+}
