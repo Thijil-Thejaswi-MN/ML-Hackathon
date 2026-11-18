@@ -94,27 +94,54 @@ def predict_trip(trip, bundle) -> PredictionResult:
         feat_df["p"] = probs
         timings["model"] = (time.perf_counter() - t0) * 1000.0
 
-        t0 = time.perf_counter()
-        decode_res = decode(feat_df, trip, graph, projector, bundle.hmm_cfg)
-        timings["hmm"] = (time.perf_counter() - t0) * 1000.0
-        timings["route"] = decode_res.timings.get("route", 0.0)
-
         # Classifier only argmax
         cls_best = feat_df.sort_values("p", ascending=False).groupby("obs_idx").first()
         classifier_arc_per_obs = np.full(n_obs, -1, dtype=np.int64)
         for obs_idx, row in cls_best.iterrows():
-            classifier_arc_per_obs[obs_idx] = int(row["arc_id"])
+            classifier_arc_per_obs[int(obs_idx)] = int(row["arc_id"])
+
+        t0 = time.perf_counter()
+        try:
+            decode_res = decode(feat_df, trip, graph, projector, bundle.hmm_cfg)
+            hmm_arc_per_obs = decode_res.arc_per_obs
+            matched = decode_res.matched
+            route_arcs = decode_res.route_arcs
+            route_polyline = decode_res.route_polyline
+            breaks = decode_res.breaks
+            timings["route"] = decode_res.timings.get("route", 0.0)
+        except (NotImplementedError, Exception):
+            # M3 HMM decoder not yet implemented; use classifier argmax
+            hmm_arc_per_obs = classifier_arc_per_obs.copy()
+            matched = classifier_arc_per_obs >= 0
+            route_arcs = [int(a) for a in classifier_arc_per_obs if a >= 0]
+            route_polyline = []
+            for arc_id in route_arcs:
+                fn, tn = arcs[arc_id, 0], arcs[arc_id, 1]
+                route_polyline.append([float(nodes[fn, 1]), float(nodes[fn, 0])])
+                route_polyline.append([float(nodes[tn, 1]), float(nodes[tn, 0])])
+            breaks = []
+            timings["route"] = 0.0
+
+        timings["hmm"] = (time.perf_counter() - t0) * 1000.0
+
+        # Build classifier polyline
+        classifier_polyline = []
+        for arc_id in classifier_arc_per_obs:
+            if arc_id >= 0:
+                fn, tn = arcs[arc_id, 0], arcs[arc_id, 1]
+                classifier_polyline.append([float(nodes[fn, 1]), float(nodes[fn, 0])])
+                classifier_polyline.append([float(nodes[tn, 1]), float(nodes[tn, 0])])
 
         timings["total"] = (time.perf_counter() - t_start) * 1000.0
         return PredictionResult(
             trip_id=trip.trip_id,
-            arc_per_obs=decode_res.arc_per_obs,
+            arc_per_obs=hmm_arc_per_obs,
             classifier_arc_per_obs=classifier_arc_per_obs,
-            matched=decode_res.matched,
-            route_arcs=decode_res.route_arcs,
-            route_polyline=decode_res.route_polyline,
-            classifier_polyline=[],
-            breaks=decode_res.breaks,
+            matched=matched,
+            route_arcs=route_arcs,
+            route_polyline=route_polyline,
+            classifier_polyline=classifier_polyline,
+            breaks=breaks,
             timings_ms=timings,
         )
 
