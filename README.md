@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # PathSnap — Distributed Map-Matching & Route Reconstruction
 
 > PES University · UE24CS352A Machine Learning · Hackathon project
@@ -796,3 +797,6 @@ pathsnap/
 ├── docs/                      DATA_NOTES.md DECISIONS.md AI_DISCLOSURE.md
 └── tests/                     leakage test, contract tests, fixtures/
 ```
+=======
+# ML-Hackathon
+>>>>>>> 3f0b5a04eaee9f50425b2d1cb88ff0379fde4d50
