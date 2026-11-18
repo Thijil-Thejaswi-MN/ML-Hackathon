@@ -1,0 +1,11 @@
+{
+ "beta_m": 2.0,
+ "epsilon": 1e-06,
+ "t_gap_s": 30.0,
+ "v_max_mps": 40.0,
+ "dijkstra_slack_m": 100.0,
+ "backward_penalty": 5.0,
+ "emission_distance_weight": 1.0,
+ "emission_sigma_m": 20.0,
+ "use_calibrated_probs": false
+}
