@@ -28,64 +28,64 @@ def eval_dir() -> str:
 
 
 def score_trip(trip_id: str, prediction) -> dict:
-    """Load <eval_dir>/<trip_id>/<trip_id>.route, evaluate prediction against it,
-    compute Top-1 (HMM and classifier-only), route continuity, sequence-level F1,
-    and candidate miss rate. Return a dict matching api.schemas.Metrics.
+    """Score a finished prediction against <eval_dir>/<trip_id>/<trip_id>.route (server side only).
+
+    Same definitions as the report (src/pathsnap/metrics.py, README 3.6):
+      * Top-1 = share of GPS observations whose predicted arc equals the observation's reference arc. The per-
+        observation reference arcs are derived from the .route with labels.derive_obs_labels (monotone alignment),
+        exactly as for train / student_test.
+      * Route continuity = share of consecutive distinct predicted arcs that connect (to-node == from-node).
+      * Sequence F1 = arc-set F1 of the stitched predicted route vs the reference route.
+      * Candidate miss rate = share of observations whose reference arc is not among their candidates.
+    Returns metrics only -- never labels or the route itself.
     """
+    import json
+    from pathsnap.io import load_trip, load_route
+    from pathsnap.geo import LocalProjector
+    from pathsnap.graph import build_graph
+    from pathsnap.labels import derive_obs_labels
+    from pathsnap.candidates import generate_candidates
+    from pathsnap.metrics import route_continuity, sequence_metrics
+
     edir = Path(eval_dir())
     route_file = edir / trip_id / f"{trip_id}.route"
-
     if not route_file.exists():
-        # Fallback if evaluation ground truth route is not available
-        return {
-            "top1_accuracy_hmm": 0.0,
-            "top1_accuracy_classifier": 0.0,
-            "route_continuity_hmm": 1.0,
-            "route_continuity_classifier": 1.0,
-            "sequence_f1": 0.0,
-            "candidate_miss_rate": 0.0,
-        }
+        # No reference available (e.g. a trip without .route): report zeros rather than invented numbers
+        return {"top1_accuracy_hmm": 0.0, "top1_accuracy_classifier": 0.0, "route_continuity_hmm": 0.0,
+                "route_continuity_classifier": 0.0, "sequence_f1": 0.0, "candidate_miss_rate": 0.0}
 
-    # Load ground-truth route arcs
-    ref_route_arcs = np.loadtxt(route_file, dtype=np.int64, ndmin=1)
-    ref_set = set(ref_route_arcs)
+    trip = load_trip(edir.parent, edir.name, trip_id)
+    route = load_route(edir.parent, edir.name, trip_id)
+    projector = LocalProjector.from_track(trip.track)
+    graph = build_graph(trip, projector)
+    truth, _ = derive_obs_labels(trip, route, projector, graph)
 
-    # Predicted arcs per observation
-    pred_arcs = prediction.arc_per_obs
-    cls_arcs = prediction.classifier_arc_per_obs
+    hmm = np.asarray(prediction.arc_per_obs, dtype=np.int64)
+    cls = np.asarray(prediction.classifier_arc_per_obs, dtype=np.int64)
+    top1_hmm = float((hmm == truth).mean()) if len(hmm) else 0.0
+    top1_cls = float((cls == truth).mean()) if len(cls) else 0.0
 
-    # Accuracy proxy: proportion of predicted arcs that belong to reference route
-    top1_hmm = float(np.mean([1.0 if a in ref_set else 0.0 for a in pred_arcs])) if len(pred_arcs) > 0 else 0.0
-    top1_cls = float(np.mean([1.0 if a in ref_set else 0.0 for a in cls_arcs])) if len(cls_arcs) > 0 else 0.0
+    def cont(seq):
+        v = route_continuity(seq, trip.arcs)["strict"]
+        return 1.0 if np.isnan(v) else float(v)
 
-    # Route continuity: fraction of consecutive transitions that are valid/identical
-    def calc_continuity(arc_seq):
-        if len(arc_seq) <= 1:
-            return 1.0
-        consec_same_or_step = 0
-        for i in range(len(arc_seq) - 1):
-            if arc_seq[i] == arc_seq[i + 1] or arc_seq[i] != -1:
-                consec_same_or_step += 1
-        return float(consec_same_or_step / (len(arc_seq) - 1))
+    stitched = prediction.route_arcs if len(prediction.route_arcs) else hmm
+    seq_f1 = sequence_metrics(stitched, route)["arc_f1"]
 
-    cont_hmm = calc_continuity(pred_arcs)
-    cont_cls = calc_continuity(cls_arcs)
-
-    # Sequence-level F1 on arc sets
-    pred_set = set(prediction.route_arcs if prediction.route_arcs else pred_arcs)
-    tp = len(pred_set & ref_set)
-    fp = len(pred_set - ref_set)
-    fn = len(ref_set - pred_set)
-
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    seq_f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+    cand_cfg = {}
+    cfg_path = Path(os.environ.get("PATHSNAP_ARTIFACTS_DIR", "artifacts")) / "candidate_config.json"
+    if cfg_path.exists():
+        cand_cfg = json.loads(cfg_path.read_text())
+    cands = generate_candidates(trip, graph, projector, cand_cfg)
+    hit = np.zeros(trip.n_obs, dtype=bool)
+    o, a = cands["obs_idx"].to_numpy(), cands["arc_id"].to_numpy()
+    hit[o[a == truth[o]]] = True
 
     return {
         "top1_accuracy_hmm": round(top1_hmm, 4),
         "top1_accuracy_classifier": round(top1_cls, 4),
-        "route_continuity_hmm": round(cont_hmm, 4),
-        "route_continuity_classifier": round(cont_cls, 4),
-        "sequence_f1": round(seq_f1, 4),
-        "candidate_miss_rate": 0.0,
+        "route_continuity_hmm": round(cont(hmm), 4),
+        "route_continuity_classifier": round(cont(cls), 4),
+        "sequence_f1": round(float(seq_f1), 4),
+        "candidate_miss_rate": round(float(1.0 - hit.mean()), 4),
     }
