@@ -27,7 +27,7 @@ FIG_LABELS = {
     "01_cv_macro_f1": "cvf1", "03_student_test_top1": "testtop1", "04_log_loss": "logloss", "06_overfitting_gap": "gap",
     "lightgbm/history": "lgbhist", "05_inference_time": "infer", "optimisation_history": "bohist",
     "param_vs_score": "boparams", "01_hmm_vs_classifier": "hmmtrip", "02_hmm_vs_classifier": "hmmoverall",
-    "map_hmm_00000076": "hmmmap", "ui_two_laptops": "ui2", "ui_trip_00000076": "ui76", "api_docs": "apidocs",
+    "map_hmm_00000076": "hmmmap", "ui_two_laptops": "ui2", "ui_trip_00000076": "ui76", "api_docs": "apidocs", "api_console_laptop1": "apiconsole",
 }
 
 # textual references -> LaTeX cross-references

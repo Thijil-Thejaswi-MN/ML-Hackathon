@@ -3,7 +3,7 @@ title: "PathSnap — Map-Matching Noisy GPS Trajectories"
 subtitle: "Technical Report · UE24CS352A ML Hackathon · 18 November 2026"
 ---
 
-**Team.** Thijil Thejaswi M N (M1, data & features, report assembly) · Sunidhi Shekar (M2, models, metrics, Bayesian optimisation) · Tasya (M3, HMM / Viterbi design) · Uthkarsha (M4, API, UI, deployment).
+**Team.** Thijil Thejaswi MN (PES1UG24AM412, M1, data & features, report assembly) · Sunidhi Shekhar (PES1UG24AM410, M2, models, metrics, Bayesian optimisation) · Tasya Shetty (PES1UG24AM411, M3, HMM / Viterbi design) · Uthkarsha (PES1UG24AM413, M4, API, UI, deployment).
 **Repository.** <https://github.com/Thijil-Thejaswi-MN/ML-Hackathon> — every number, table and figure below is produced by code in this repository; the file that holds each result is cited next to it.
 
 **Partitions.** *train* = 80 trips (all model fitting, cross-validation, threshold and decoder tuning, Bayesian optimisation). *student_test* = 10 trips (evaluated once per final configuration, never used to choose anything). The evaluator partition was not available to us during development.
@@ -260,6 +260,8 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 ![Figure 7.2 — Full UI page for student_test trip 00000076 (API at `localhost:8000`): HMM Top-1 93.54 %, classifier 91.05 %, route continuity 85.2 %, live Folium map with GPS, HMM and classifier routes, stage timings and trip statistics.](screenshots/ui_trip_00000076.png){width=88%}
 
 ![Figure 7.3 — FastAPI interactive documentation (`/docs`) of the API on laptop 1: `GET /health`, `GET /trips`, `POST /predict` and the request/response schemas.](screenshots/api_docs.png){width=80%}
+
+![Figure 7.4 — Command prompt of laptop 1, the machine running the API (`uvicorn api.main:app --host 0.0.0.0 --port 8000`): the model bundle loads (manifest: `lightgbm_tuned`, 37 features, τ = 0.45), then the evaluator UI's `GET /health`, `GET /trips` and `POST /predict` calls all return `200 OK`. The `/predict` request for student_test trip 00000000 reports HMM Top-1 96.64 % and sequence F1 0.9650, matching `results/hmm/comparison.csv`. In this session the UI ran on the same laptop (client 127.0.0.1); figure 7.1 shows the UI on laptop 2 reaching this API over the network.](screenshots/api_console_laptop1.png){width=100%}
 
 **API console on the receiving laptop.** Every `/predict` call is logged by the API process; the full console output of the screenshot session is committed as `report/screenshots/api_console_log.txt` (9 `/predict` requests, all `200 OK`). Excerpt (timings shortened, otherwise verbatim):
 

@@ -13,7 +13,7 @@
 | Folium maps / plots | `src/pathsnap/viz/folium_maps.py`, `maps/`, `figures/` | |
 | Decisions, data notes, AI disclosure | `docs/DECISIONS.md`, `docs/DATA_NOTES.md`, `docs/AI_DISCLOSURE.md` | |
 
-Team: Thijil Thejaswi M N (M1) · Sunidhi Shekar (M2) · Tasya (M3) · Uthkarsha (M4). The planning notes below
+Team: Thijil Thejaswi MN (PES1UG24AM412, M1) · Sunidhi Shekhar (PES1UG24AM410, M2) · Tasya Shetty (PES1UG24AM411, M3) · Uthkarsha (PES1UG24AM413, M4). The planning notes below
 (Parts 1–3, 5) are the working document we used during the event.
 
 # PathSnap — Distributed Map-Matching & Route Reconstruction
