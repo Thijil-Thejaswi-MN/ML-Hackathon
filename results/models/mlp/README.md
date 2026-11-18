@@ -7,4 +7,4 @@ not comparable with the other models and cannot be re-derived from the repositor
 
 To produce comparable MLP results under the shared protocol (requires PyTorch):
 
-    python scripts/03_train_model.py --model mlp --train-obs-frac 0.3
+    python scripts/03_train_model.py --model mlp

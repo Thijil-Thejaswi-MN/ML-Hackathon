@@ -111,7 +111,7 @@ Source: `results/model_comparison.csv` (`scripts/04_compare_models.py`). Top-1, 
 
 *Route continuity here is classifier-only by design; HMM continuity is reported in §5.*
 
-**A sixth model (MLP) was trained by M4** (`src/pathsnap/models/mlp.py`, PyTorch, 64-32 hidden units). Its numbers were produced with a separate script that is not in the repository and that scored cross-validation on all observations (including the unreliable trips 33/54), so they are **not comparable** to the table and cannot be re-derived from the repository; we therefore leave the MLP out of the comparison rather than report unverifiable numbers. It can be re-run under the shared protocol with `python scripts/03_train_model.py --model mlp --train-obs-frac 0.3`.
+**A sixth model (MLP) was trained by M4** (`src/pathsnap/models/mlp.py`, PyTorch, 64-32 hidden units). Its numbers were produced with a separate script that is not in the repository and that scored cross-validation on all observations (including the unreliable trips 33/54), so they are **not comparable** to the table and cannot be re-derived from the repository; we therefore leave the MLP out of the comparison rather than report unverifiable numbers. It can be re-run under the shared protocol with `python scripts/03_train_model.py --model mlp`.
 
 **Selection.** Primary criterion CV Top-1, then CV macro F1, then log loss (the HMM consumes probabilities) and inference time (live demo). LightGBM leads on every criterion (CV Top-1 0.9058 vs 0.8967 for both forests; `docs/DECISIONS.md`) and is small (1.3 MB) and fast, so it was taken forward to Bayesian optimisation (§4); the tuned model is the deployed one (`artifacts/manifest.json`).
 
