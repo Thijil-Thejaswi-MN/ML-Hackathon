@@ -37,6 +37,9 @@ class _PyTorchMLP(nn.Module):
 class MLPCandidateModel(CandidateModel):
     name: str = "mlp"
     family: str = "Neural"
+    accepts_eval_set = True          # training.cross_validate passes CV fold 0 for a real per-epoch history
+    HISTORY_TRAIN_ROWS = 200_000     # fixed train subsample on which the per-epoch train log loss is measured
+    PREDICT_CHUNK = 262_144
 
     def __init__(
         self,
@@ -75,76 +78,71 @@ class MLPCandidateModel(CandidateModel):
         self.net: Optional[_PyTorchMLP] = None
         self.in_features: Optional[int] = None
 
-        # REAL epoch-wise history dictionary for reports & plots
-        self.history: Optional[dict] = {"epoch": [], "train_loss": [], "val_loss": []}
+        # REAL epoch-wise history (only when fit() receives eval_set); otherwise None, as the contract requires
+        self.history: Optional[dict] = None
 
-    def fit(self, X, y, groups=None, **kw) -> "MLPCandidateModel":
+    def fit(self, X, y, groups=None, eval_set=None, **kw) -> "MLPCandidateModel":
+        """Train on all rows given. If the training script passes eval_set=(X_val, y_val) (CV fold 0, see
+        training.cross_validate) the unweighted log loss on a fixed train subsample and on that held-out fold is
+        recorded after every epoch. The validation fold is only monitored, never used to stop or select."""
         torch.manual_seed(self.random_state)
         np.random.seed(self.random_state)
 
         X_arr = np.asarray(X, dtype=np.float32)
         y_arr = np.asarray(y, dtype=np.float32)
-
         self.in_features = X_arr.shape[1]
         self.net = _PyTorchMLP(self.in_features, self.hidden_dims, self.dropout).to(self.device)
 
-        # Train / val split for epoch curves (15% validation split)
-        n = len(X_arr)
-        indices = np.arange(n)
-        np.random.shuffle(indices)
-        val_size = int(0.15 * n)
-        val_idx, train_idx = indices[:val_size], indices[val_size:]
+        gen = torch.Generator().manual_seed(self.random_state)
+        loader = DataLoader(TensorDataset(torch.from_numpy(X_arr), torch.from_numpy(y_arr)),
+                            batch_size=self.batch_size, shuffle=True, generator=gen,
+                            drop_last=len(X_arr) > self.batch_size)   # BatchNorm cannot train on a 1-row batch
+        criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([self.pos_weight], device=self.device))
+        optimizer = torch.optim.Adam(self.net.parameters(), lr=self.lr, weight_decay=self.weight_decay)
 
-        X_train, y_train = torch.tensor(X_arr[train_idx]), torch.tensor(y_arr[train_idx])
-        X_val, y_val = torch.tensor(X_arr[val_idx]), torch.tensor(y_arr[val_idx])
-
-        train_loader = DataLoader(
-            TensorDataset(X_train, y_train), batch_size=self.batch_size, shuffle=True
-        )
-
-        pos_w = torch.tensor([self.pos_weight], device=self.device)
-        criterion = nn.BCEWithLogitsLoss(pos_weight=pos_w)
-        optimizer = torch.optim.Adam(
-            self.net.parameters(), lr=self.lr, weight_decay=self.weight_decay
-        )
-
-        self.history = {"epoch": [], "train_loss": [], "val_loss": []}
+        self.history = None
+        if eval_set is not None:
+            rng = np.random.default_rng(self.random_state)
+            mon = rng.choice(len(X_arr), min(len(X_arr), self.HISTORY_TRAIN_ROWS), replace=False)
+            X_mon, y_mon = X_arr[mon], y_arr[mon]
+            X_val = np.asarray(eval_set[0], dtype=np.float32)
+            y_val = np.asarray(eval_set[1], dtype=np.float32)
+            hist = {"iteration": [], "train_logloss": [], "val_logloss": []}
 
         for epoch in range(1, self.epochs + 1):
             self.net.train()
-            train_losses = []
-            for bx, by in train_loader:
+            for bx, by in loader:
                 bx, by = bx.to(self.device), by.to(self.device)
                 optimizer.zero_grad()
-                logits = self.net(bx)
-                loss = criterion(logits, by)
+                loss = criterion(self.net(bx), by)
                 loss.backward()
                 optimizer.step()
-                train_losses.append(loss.item())
-
-            # Evaluate val loss
-            self.net.eval()
-            with torch.no_grad():
-                val_logits = self.net(X_val.to(self.device))
-                val_loss = criterion(val_logits, y_val.to(self.device)).item()
-
-            avg_train_loss = float(np.mean(train_losses))
-            self.history["epoch"].append(epoch)
-            self.history["train_loss"].append(round(avg_train_loss, 5))
-            self.history["val_loss"].append(round(val_loss, 5))
-
+            if eval_set is not None:
+                hist["iteration"].append(epoch)
+                hist["train_logloss"].append(self._log_loss(X_mon, y_mon))
+                hist["val_logloss"].append(self._log_loss(X_val, y_val))
+                print(f"      epoch {epoch:2d}: train logloss {hist['train_logloss'][-1]:.4f}  "
+                      f"val logloss {hist['val_logloss'][-1]:.4f}", flush=True)
+        if eval_set is not None:
+            self.history = hist
         return self
+
+    def _log_loss(self, X, y) -> float:
+        p = np.clip(self.predict_proba(X).astype(np.float64), 1e-7, 1 - 1e-7)
+        y = np.asarray(y, dtype=np.float64)
+        return float(-np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
 
     def predict_proba(self, X) -> np.ndarray:
         if self.net is None:
             raise ValueError("MLPCandidateModel is not fitted.")
         self.net.eval()
         X_arr = np.asarray(X, dtype=np.float32)
-        X_t = torch.tensor(X_arr, device=self.device)
+        out = np.empty(len(X_arr), dtype=np.float32)
         with torch.no_grad():
-            logits = self.net(X_t)
-            probs = torch.sigmoid(logits).cpu().numpy()
-        return probs.astype(np.float32)
+            for i in range(0, len(X_arr), self.PREDICT_CHUNK):
+                xb = torch.from_numpy(X_arr[i:i + self.PREDICT_CHUNK]).to(self.device)
+                out[i:i + self.PREDICT_CHUNK] = torch.sigmoid(self.net(xb)).cpu().numpy()
+        return out
 
     def save(self, path: str) -> None:
         state = {
@@ -160,7 +158,7 @@ class MLPCandidateModel(CandidateModel):
         data = joblib.load(path)
         instance = cls(**data["params"])
         instance.in_features = data["in_features"]
-        instance.history = data.get("history", {})
+        instance.history = data.get("history")
         if data["state_dict"] is not None and instance.in_features is not None:
             instance.net = _PyTorchMLP(instance.in_features, instance.hidden_dims, instance.dropout)
             instance.net.load_state_dict(data["state_dict"])

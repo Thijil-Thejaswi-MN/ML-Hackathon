@@ -242,7 +242,7 @@ def run_experiment(model_name: str, params: dict, tag: str | None = None, data: 
         fig, ax = plt.subplots(figsize=(6, 4))
         ax.plot(h.iteration, h.train_logloss, label="train (fold-0 training folds)")
         ax.plot(h.iteration, h.val_logloss, label="validation (fold 0)")
-        ax.set(xlabel="boosting iteration", ylabel="log loss", title=f"{tag}: training history  [train, CV fold 0]")
+        ax.set(xlabel="epoch" if model_name == "mlp" else "boosting iteration", ylabel="log loss", title=f"{tag}: training history  [train, CV fold 0]")
         ax.legend(); ax.grid(alpha=.3)
         fig.tight_layout(); fig.savefig(out / "history.png", dpi=130); plt.close(fig)
     cm = np.array(test_eval["reliable"]["confusion_matrix"])
