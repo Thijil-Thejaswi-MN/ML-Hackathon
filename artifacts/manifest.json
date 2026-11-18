@@ -1,0 +1,27 @@
+{
+ "model_tag": "lightgbm_tuned",
+ "model_file": "model.joblib",
+ "model_class": "LightGBMModel",
+ "created_utc": "2026-11-18T09:50:29+00:00",
+ "git_commit": "75a346a1b2c2d3a749f95863e9e78c956c27ec18",
+ "versions": {
+  "python": "3.12.4",
+  "numpy": "2.5.5",
+  "pandas": "3.1.1",
+  "scikit-learn": "1.9.1",
+  "lightgbm": "4.7.0",
+  "optuna": "5.1.0"
+ },
+ "training_data": "80 train trips (label_reliable observations); student_test used only for evaluation",
+ "features_sha256": "788a4a10152c382346a2ec349daf338c670330ee46db27529f347d714d05d39d",
+ "n_features": 37,
+ "threshold": 0.45,
+ "metrics_snapshot": {
+  "cv_top1_mean": 0.9073757692427049,
+  "cv_macro_f1_mean": 0.9452592321332862,
+  "student_test_top1": 0.9073068893528183,
+  "student_test_macro_f1": 0.9440699572310517,
+  "student_test_log_loss": 0.04234212267385266
+ },
+ "model_size_mb": 3.59
+}
