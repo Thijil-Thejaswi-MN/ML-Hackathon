@@ -1,8 +1,9 @@
 % ---- PathSnap report: layout & typography (XeLaTeX) ----
 \usepackage{fontspec}
-\setmainfont{Liberation Serif}
-\setsansfont{Liberation Sans}
-\setmonofont{DejaVu Sans Mono}[Scale=0.84]
+% Body: TeX Gyre Pagella (Palatino design); headings, header and footer: Fira Sans; code: DejaVu Sans Mono.
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{Fira Sans}[BoldFont={Fira Sans SemiBold}, ItalicFont={Fira Sans Italic}]
+\setmonofont{DejaVu Sans Mono}[Scale=0.80]
 \usepackage[a4paper,top=24mm,bottom=24mm,left=22mm,right=22mm,headheight=14pt]{geometry}
 \usepackage{microtype}
 \usepackage{xcolor}
@@ -24,11 +25,13 @@
 \fancyhf{}
 \fancyhead[L]{\sffamily\footnotesize\color{accent}PathSnap --- Technical Report}
 \fancyhead[R]{\sffamily\footnotesize\color{gray}\nouppercase{\leftmark}}
-\fancyfoot[L]{\sffamily\footnotesize\color{gray}UE24CS352A ML Hackathon $\cdot$ 18 November 2026}
+\fancyfoot[L]{\sffamily\footnotesize\color{gray}PES University $\cdot$ UE24CS352A Machine Learning Hackathon}
 \fancyfoot[R]{\sffamily\footnotesize Page \thepage\ of \pageref*{LastPage}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\headrule}{\hbox to\headwidth{\color{rule}\leaders\hrule height \headrulewidth\hfill}}
 \renewcommand{\sectionmark}[1]{\markboth{\thesection\quad #1}{}}
+% every page carries the same header/footer (LaTeX would otherwise switch some pages to 'plain')
+\makeatletter\let\ps@plain\ps@fancy\let\ps@empty\ps@fancy\makeatother
 \usepackage{float}
 \floatplacement{figure}{H}
 \usepackage{caption}

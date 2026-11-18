@@ -2,7 +2,7 @@
 
     python report/build_report.py
 
-Needs pandoc (>= 3) and a TeX distribution with XeLaTeX + latexmk. The markdown file is the single source of the
+Needs pandoc (>= 3) and a TeX distribution with XeLaTeX + latexmk (fonts: TeX Gyre Pagella, Fira Sans, DejaVu Sans Mono). The markdown file is the single source of the
 report text (readable on GitHub); this script only prepares a temporary copy for typesetting:
   * removes the manual section numbers (LaTeX numbers sections, figures and pages itself),
   * gives every figure a label and turns textual figure references into live cross-references,
@@ -51,8 +51,8 @@ def prepare(md: str) -> str:
     md = re.sub(r"(?m)^(#{2,4}) \d+(?:\.\d+)*\.? ", r"\1 ", md)
     md = md.replace("## Problem and pipeline in one paragraph", "## Problem and approach")
     md = re.sub(r"(?m)^## Appendix .*$", "## Appendix: reproducing every result {-}", md)
-    # glyphs missing from the body font -> math
-    md = md.replace("10⁻⁶", "$10^{-6}$").replace(" ∈ ", " $\\in$ ")
+    # superscript digits are not in the body font -> real superscript
+    md = md.replace("10⁻⁶", "10^−6^")
     # HTML subscripts -> pandoc subscripts
     md = re.sub(r"<sub>([^<\s]+)</sub>", r"~\1~", md)
     # figures: strip manual caption numbers, add labels
