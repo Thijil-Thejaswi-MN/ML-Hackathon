@@ -15,7 +15,7 @@
 \vspace{14mm}
 {\sffamily\small\color{gray} TEAM\par}
 \vspace{2mm}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{44mm}>{\raggedright\arraybackslash}p{30mm}>{\raggedright\arraybackslash}p{88mm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{42mm}>{\raggedright\arraybackslash}p{32mm}>{\raggedright\arraybackslash}p{80mm}@{}}
 \toprule
 \textbf{Name} & \textbf{SRN} & \textbf{Role} \\
 \midrule
@@ -50,8 +50,8 @@ classifier that scores how likely each candidate is the true arc. An HMM decoded
 the most plausible \emph{connected} sequence of arcs, and a shortest-path step stitches it into a continuous route. The
 full pipeline is served by a FastAPI service on laptop~1 and driven from a Streamlit evaluator UI on laptop~2.
 
-Five models were trained under one protocol (5-fold cross-validation grouped by trip); LightGBM was best on every
-selection criterion and was tuned with 40 trials of Bayesian optimisation (Optuna TPE).
+Six models were trained under one protocol (5-fold cross-validation grouped by trip); LightGBM was best on cross-validated
+Top-1, macro F1 and log loss, and was tuned with 40 trials of Bayesian optimisation (Optuna TPE).
 
 \begin{center}
 \small

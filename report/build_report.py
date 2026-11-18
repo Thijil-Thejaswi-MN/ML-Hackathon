@@ -25,7 +25,7 @@ FIG_LABELS = {
     "03_missing_values": "missing", "02_sampling_intervals": "sampling", "04_label_distance": "labeldist",
     "07_trajectories": "traj", "05_network_stats": "network", "06_candidates": "cands", "map_eda_00000033": "edamap",
     "01_cv_macro_f1": "cvf1", "03_student_test_top1": "testtop1", "04_log_loss": "logloss", "06_overfitting_gap": "gap",
-    "lightgbm/history": "lgbhist", "05_inference_time": "infer", "optimisation_history": "bohist",
+    "lightgbm/history": "lgbhist", "mlp/history": "mlphist", "05_inference_time": "infer", "optimisation_history": "bohist",
     "param_vs_score": "boparams", "01_hmm_vs_classifier": "hmmtrip", "02_hmm_vs_classifier": "hmmoverall",
     "map_hmm_00000076": "hmmmap", "ui_two_laptops": "ui2", "ui_trip_00000076": "ui76", "api_docs": "apidocs", "api_console_laptop1": "apiconsole",
 }
@@ -34,6 +34,7 @@ FIG_LABELS = {
 TEXT_REFS = [
     ("(figure 2.3)", "(Figure~\\ref{fig:labeldist})"),
     ("figure 3.3e", "Figure~\\ref{fig:lgbhist}"),
+    ("figure 3.3f", "Figure~\\ref{fig:mlphist}"),
     ("(figure 5.1)", "(Figure~\\ref{fig:hmmtrip})"),
     ("(figures 2.6, 6.1, 7.2, 7.3)",
      "(Figures~\\ref{fig:edamap}, \\ref{fig:hmmmap}, \\ref{fig:ui76} and \\ref{fig:apidocs})"),
@@ -58,7 +59,7 @@ def prepare(md: str) -> str:
     # figures: strip manual caption numbers, add labels
     def fig(m):
         cap, path, attrs = m.group(1), m.group(2), m.group(3) or ""
-        cap = re.sub(r"^(Figure \d+(\.\d+)? — |\([a-f]\) )", "", cap)
+        cap = re.sub(r"^(Figure \d+(\.\d+)? — |\([a-z]\) )", "", cap)
         label = next((v for k, v in FIG_LABELS.items() if k in path), None)
         if label is None:
             sys.exit(f"no label for figure {path}")
