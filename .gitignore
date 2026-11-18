@@ -19,3 +19,6 @@ __pycache__/
 *.log
 !results/**/train.log
 .DS_Store
+
+# trained models live next to their results but are too big for git; the chosen one is exported to artifacts/
+results/models/*/model.joblib

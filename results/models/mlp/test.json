@@ -1,0 +1,24 @@
+{
+  "model": "mlp",
+  "threshold_used": 0.8,
+  "full_train_time_s": 84.99,
+  "inference_time_ms": 22.25,
+  "ms_per_1000_obs": 1.16,
+  "test_top1": 0.8942,
+  "test_top1_given_hit": 0.8942,
+  "test_macro_f1": 0.9357,
+  "test_log_loss": 0.0671,
+  "test_precision": 0.9019,
+  "test_recall": 0.8635,
+  "test_accuracy": 0.98,
+  "confusion_matrix": [
+    [
+      199115,
+      1798
+    ],
+    [
+      2612,
+      16529
+    ]
+  ]
+}

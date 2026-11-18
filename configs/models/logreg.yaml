@@ -1,0 +1,6 @@
+# Logistic regression (M2) - untuned configuration. Inputs are standardised (artifacts/scaler.joblib).
+C: 1.0                 # inverse L2 strength (L2 is the default penalty); 1.0 = sklearn default, mild regularisation on 37 standardised features
+class_weight: null     # natural ~8 % positive rate keeps probabilities calibrated for the HMM; 'balanced' is the experiment
+max_iter: 300
+solver: lbfgs
+random_state: 42

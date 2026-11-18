@@ -1,0 +1,48 @@
+{
+  "model": "mlp",
+  "n_splits": 5,
+  "best_threshold": 0.8,
+  "mean_train_time_s": 67.16,
+  "folds": [
+    {
+      "fold": 0,
+      "train_time_s": 61.78,
+      "macro_f1": 0.815,
+      "log_loss": 0.234,
+      "top1": 0.4993
+    },
+    {
+      "fold": 1,
+      "train_time_s": 68.15,
+      "macro_f1": 0.9056,
+      "log_loss": 0.0933,
+      "top1": 0.8563
+    },
+    {
+      "fold": 2,
+      "train_time_s": 70.28,
+      "macro_f1": 0.9352,
+      "log_loss": 0.0764,
+      "top1": 0.9242
+    },
+    {
+      "fold": 3,
+      "train_time_s": 68.9,
+      "macro_f1": 0.9066,
+      "log_loss": 0.0851,
+      "top1": 0.8154
+    },
+    {
+      "fold": 4,
+      "train_time_s": 66.69,
+      "macro_f1": 0.9388,
+      "log_loss": 0.0625,
+      "top1": 0.906
+    }
+  ],
+  "oof_macro_f1": 0.9207,
+  "oof_log_loss": 0.1261,
+  "oof_top1": 0.8003,
+  "macro_f1_std": 0.0448,
+  "top1_std": 0.1552
+}
