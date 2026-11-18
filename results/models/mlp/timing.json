@@ -1,0 +1,17 @@
+{
+ "cv_fit_seconds_per_fold": [
+  603.88,
+  572.98,
+  513.18,
+  499.51,
+  500.4
+ ],
+ "cv_fit_seconds_mean": 537.99,
+ "train_seconds_full": 613.59,
+ "inference_seconds_student_test": 0.051,
+ "inference_ms_per_1000_obs": 2.64,
+ "student_test_candidate_rows": 220054,
+ "student_test_obs": 19160,
+ "model_size_mb": 0.02,
+ "wall_clock_total_s": 3335.4
+}

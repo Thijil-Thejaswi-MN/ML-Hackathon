@@ -6,7 +6,7 @@ OWNER: M2.  Run AFTER scripts/02_build_dataset.py:
     python scripts/03_train_model.py --model lightgbm          (or --model hgb if LightGBM is unavailable)
     python scripts/03_train_model.py --model extratrees
     python scripts/03_train_model.py --model rf
-    python scripts/03_train_model.py --model mlp --train-obs-frac 0.3
+    python scripts/03_train_model.py --model mlp
     python scripts/03_train_model.py --model logreg --params '{"class_weight": "balanced"}' --tag logreg_balanced
 Then: python scripts/04_compare_models.py
 

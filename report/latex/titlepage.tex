@@ -15,12 +15,14 @@
 \vspace{14mm}
 {\sffamily\small\color{gray} TEAM\par}
 \vspace{2mm}
-\begin{tabular}{@{}p{60mm}p{102mm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{42mm}>{\raggedright\arraybackslash}p{32mm}>{\raggedright\arraybackslash}p{80mm}@{}}
 \toprule
-\textbf{Thijil Thejaswi M N} (M1) & Data understanding, preprocessing, labels, candidates, features; report \\
-\textbf{Sunidhi Shekar} (M2) & Models, metrics, cross-validation, Bayesian optimisation \\
-\textbf{Tasya} (M3) & HMM / Viterbi route-reconstruction design \\
-\textbf{Uthkarsha} (M4) & FastAPI backend, Streamlit evaluator UI, deployment \\
+\textbf{Name} & \textbf{SRN} & \textbf{Role} \\
+\midrule
+Thijil Thejaswi MN (M1) & PES1UG24AM412 & Data, preprocessing, labels, candidates, features; report \\
+Sunidhi Shekhar (M2) & PES1UG24AM410 & Models, metrics, cross-validation, Bayesian optimisation \\
+Tasya Shetty (M3) & PES1UG24AM411 & HMM / Viterbi route-reconstruction design \\
+Uthkarsha (M4) & PES1UG24AM413 & FastAPI backend, Streamlit evaluator UI, deployment \\
 \bottomrule
 \end{tabular}
 \vspace{12mm}
@@ -48,8 +50,8 @@ classifier that scores how likely each candidate is the true arc. An HMM decoded
 the most plausible \emph{connected} sequence of arcs, and a shortest-path step stitches it into a continuous route. The
 full pipeline is served by a FastAPI service on laptop~1 and driven from a Streamlit evaluator UI on laptop~2.
 
-Five models were trained under one protocol (5-fold cross-validation grouped by trip); LightGBM was best on every
-selection criterion and was tuned with 40 trials of Bayesian optimisation (Optuna TPE).
+Six models were trained under one protocol (5-fold cross-validation grouped by trip); LightGBM was best on cross-validated
+Top-1, macro F1 and log loss, and was tuned with 40 trials of Bayesian optimisation (Optuna TPE).
 
 \begin{center}
 \small
