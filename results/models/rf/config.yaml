@@ -1,8 +1,25 @@
-bootstrap: true
-max_depth: 14
-max_samples: 0.25
-min_samples_leaf: 4
-min_samples_split: 5
-n_estimators: 100
-n_jobs: -1
-random_state: 42
+model: rf
+tag: rf
+family: Ensemble
+params:
+  n_estimators: 100
+  max_depth: 12
+  min_samples_split: 5
+  min_samples_leaf: 2
+  class_weight: balanced_subsample
+  random_state: 42
+  n_jobs: -1
+seed: 42
+train_obs_frac: 1.0
+training_rows: label_reliable observations only
+features: 37
+scaling: artifacts/scaler.joblib (fit on train)
+n_train_rows_full: 1934576
+versions:
+  python: 3.12.4
+  numpy: 2.5.5
+  pandas: 3.1.1
+  scikit-learn: 1.9.1
+  lightgbm: 4.7.0
+  optuna: 5.1.0
+notes: ''

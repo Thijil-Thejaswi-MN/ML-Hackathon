@@ -1,0 +1,26 @@
+model: extratrees
+tag: extratrees
+family: Tree-based ensemble (randomised)
+params:
+  n_estimators: 200
+  max_depth: 18
+  min_samples_leaf: 5
+  max_features: sqrt
+  class_weight: null
+  max_samples: null
+  random_state: 42
+  n_jobs: -1
+seed: 42
+train_obs_frac: 1.0
+training_rows: label_reliable observations only
+features: 37
+scaling: artifacts/scaler.joblib (fit on train)
+n_train_rows_full: 1934576
+versions:
+  python: 3.12.4
+  numpy: 2.5.5
+  pandas: 3.1.1
+  scikit-learn: 1.9.1
+  lightgbm: 4.7.0
+  optuna: 5.1.0
+notes: ''
