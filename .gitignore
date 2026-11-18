@@ -19,3 +19,4 @@ __pycache__/
 *.log
 !results/**/train.log
 .DS_Store
+results/models/extratrees/model.joblib
