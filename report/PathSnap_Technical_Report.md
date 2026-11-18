@@ -211,7 +211,33 @@ Code: `src/pathsnap/decoding/hmm.py` (decoder), `src/pathsnap/decoding/route.py`
 5. **Disconnected segments.** A transition whose network path is longer than v<sub>max</sub>·Δt + slack (40 m/s, 100 m) is unreachable and gets log ε (ε = 10⁻⁶) instead of −∞, so Viterbi can still cross a genuine gap in the network rather than fail. After decoding, consecutive decoded arcs that do not connect are joined by the shortest network path (≤ 3 km); joins that do not exist are left as gaps and counted.
 6. **Did the HMM help?** Decoder parameters were tuned on **train out-of-fold probabilities** of the final model (grid β ∈ {0.5, 1, 2, 5, 10, 20, 50} m × λ ∈ {0, 1}; `results/hmm/decoder_tuning.csv`), and student_test was decoded once with the chosen configuration (`results/hmm/comparison.csv`):
 
-> **[HMM RESULTS — filled from results/hmm/decoder_tuning_summary.json and comparison_summary.json after running scripts 06 and 07 with --model lightgbm_tuned]**
+**Decoder tuning (train, out-of-fold probabilities of tuned LightGBM, reliable fixes; `results/hmm/decoder_tuning.csv`).** Classifier-only Top-1 on the same fixes is 0.9106.
+
+| β (m) | 0.5 | 1 | **2** | 5 | 10 | 20 | 50 |
+|---|---|---|---|---|---|---|---|
+| HMM Top-1, λ = 0 | 0.8861 | 0.9102 | 0.9145 | 0.9106 | 0.9060 | 0.8991 | 0.8901 |
+| HMM Top-1, λ = 1 | 0.8895 | 0.9107 | **0.9147** | 0.9110 | 0.9062 | 0.9000 | 0.8909 |
+
+The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds little (+0.0002–0.0034). Both extremes hurt: with a very small β any mismatch between network and GPS distance is punished so hard that the decoder overrides correct classifier choices; with a large β transitions barely matter and the HMM loses its smoothing (β = 50 m is 2 points *below* classifier-only). Chosen: β = 2 m, λ = 1 (`artifacts/hmm_config.json`, loaded by the API).
+
+**Classifier-only vs classifier + HMM (student_test, decoded once; `results/hmm/comparison_summary.json`).**
+
+| student_test (10 trips) | Classifier only | Classifier + HMM |
+|---|---|---|
+| Top-1 accuracy (all fixes) | 0.9073 | **0.9140** |
+| Top-1 accuracy (reliable fixes) | 0.9086 | **0.9153** |
+| Route continuity (raw decoded sequence) | 0.802 | **0.889** |
+| Route continuity after shortest-path stitching | — | **1.000** (0.9987 on trip 56) |
+| Arc-set F1 of the route vs the reference route | 0.891 | **0.965** |
+| Decode time | — | 92 ms per 1000 fixes (0.02–0.46 s per trip) |
+
+**Yes, HMM decoding improved the route**: +0.67 points Top-1, and above all a far more coherent route (continuity +8.7 points; arc-set F1 +7.4 points, because isolated wrong arcs — mostly reverse twins and short side streets — are removed). Per trip (figure 5.1) it improved **7 of 10 trips** (largest gains: trip 07 0.965 → 0.993, trip 76 0.911 → 0.935), left trip 52 unchanged and **made two trips slightly worse**: trip 40 (0.945 → 0.937) and trip 77 (0.828 → 0.823).
+
+**Where it did not help** (`results/hmm/failure_cases.csv`). The longest wrong stretches are places where the *classifier was already wrong*: trip 77, fixes 2312–2563 (252 fixes; classifier correct on only 21 % of them) and trip 40, fixes 0–75 (classifier 25 %). When the emission evidence consistently favours a parallel road, a connected path along that wrong road is perfectly plausible to the transition model, so Viterbi follows it with confidence — and can pull a few neighbouring correct fixes onto it, which explains the small losses on trips 40 and 77. The HMM repairs isolated errors; it cannot repair systematic ones.
+
+![Figure 5.1 — Top-1 and route continuity per trip, classifier-only vs classifier + HMM (student_test).](../figures/hmm/01_hmm_vs_classifier_per_trip.png){width=100%}
+
+![Figure 5.2 — Overall comparison (student_test).](../figures/hmm/02_hmm_vs_classifier_overall.png){width=62%}
 
 ---
 

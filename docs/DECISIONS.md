@@ -41,3 +41,12 @@ Format: date/time - decision - alternatives considered - evidence (file + number
   CV macro F1 0.9445 -> 0.9453, student-test Top-1 0.9014 -> 0.9073, log loss 0.0434 -> 0.0423; cost: inference 40.7 -> 117.5
   ms / 1000 obs (900 trees), still far below the demo budget. Kept the tuned model: small but consistent gains on CV and test.
 ## Decoder - parameters chosen and why
+2026-11-18 - **HMM/Viterbi: beta_m = 2.0 m, emission_distance_weight = 1.0** (`artifacts/hmm_config.json`). Model designed by M3
+(notebook `notebooks/pathsnap_m3_hmm_route_matching.ipynb`), implemented in `src/pathsnap/decoding/`.
+- Tuned on train out-of-fold probabilities of the final model (`lightgbm_tuned`), grid beta in {0.5, 1, 2, 5, 10, 20, 50} x
+  lambda in {0, 1}, objective pooled Top-1 on reliable train fixes (`results/hmm/decoder_tuning.csv`). Classifier-only 0.9106;
+  best HMM 0.9147 at beta 2 (inside the grid; beta 0.5 -> 0.8895, beta 50 -> 0.8909). Student_test was not used to choose.
+- Confirmation on student_test, decoded once (`results/hmm/comparison_summary.json`): Top-1 0.9073 -> 0.9140, continuity
+  0.802 -> 0.889 (1.000 after stitching), arc-set F1 0.891 -> 0.965; 7 trips better, 2 slightly worse (40, 77), 1 unchanged.
+- Fixed (not tuned): t_gap_s 30, v_max 40 m/s, slack 100 m, backward penalty 5, epsilon 1e-6, sigma 20 m, stitch limit 3 km.
+
