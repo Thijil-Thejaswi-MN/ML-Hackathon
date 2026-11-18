@@ -22,10 +22,10 @@
   "stitched_continuity": 0.9998730964467004,
   "cls_arc_f1": 0.8905883467168028,
   "hmm_arc_f1": 0.9646645145271094,
-  "decode_seconds_total": 1.772,
-  "decode_ms_per_1000_obs": 92.48434237995825
+  "decode_seconds_total": 4.848,
+  "decode_ms_per_1000_obs": 253.02713987473902
  },
  "trips_improved": 7,
  "trips_worse": 2,
- "wall_clock_s": 2.1
+ "wall_clock_s": 5.4
 }

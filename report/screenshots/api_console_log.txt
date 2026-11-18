@@ -1,0 +1,240 @@
+uvicorn : INFO:     Started server process [29160]
+At line:4 char:1
++ uvicorn api.main:app --host 0.0.0.0 --port 8000 2>&1 | Tee-Object -Fi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [29160]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+2026-11-18 17:58:56,987 [INFO] Loaded bundle from artifacts (manifest: {'model_tag': 'lightgbm_tuned', 'model_file': 
+'model.joblib', 'model_class': 'LightGBMModel', 'created_utc': '2026-11-18T09:50:29+00:00', 'git_commit': 
+'75a346a1b2c2d3a749f95863e9e78c956c27ec18', 'versions': {'python': '3.12.4', 'numpy': '2.5.5', 'pandas': '3.1.1', 
+'scikit-learn': '1.9.1', 'lightgbm': '4.7.0', 'optuna': '5.1.0'}, 'training_data': '80 train trips (label_reliable 
+observations); student_test used only for evaluation', 'features_sha256': 
+'788a4a10152c382346a2ec349daf338c670330ee46db27529f347d714d05d39d', 'n_features': 37, 'threshold': 0.45, 
+'metrics_snapshot': {'cv_top1_mean': 0.9073757692427049, 'cv_macro_f1_mean': 0.9452592321332862, 'student_test_top1': 
+0.9073068893528183, 'student_test_macro_f1': 0.9440699572310517, 'student_test_log_loss': 0.04234212267385266}, 
+'model_size_mb': 3.59})
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:27144 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25779 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25779 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:00:16,580 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 23.104600000806386, 'candidates': 262.9191999985778, 'features': 157.88790000078734, 'model': 
+614.8342000014964, 'hmm': 1312.4462999985553, 'route': 110.04699999830336, 'total': 3352.06, 'scoring': 827.74}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 3410.4ms
+==================================================
+INFO:     127.0.0.1:38590 - "POST /predict HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:00:17,660 [INFO] 
+==================================================
+PathSnap Request: Trip=00000007 | Client=127.0.0.1
+Timings: {'load': 2.0342000025266316, 'candidates': 65.4130000002624, 'features': 61.96339999951306, 'model': 
+168.53849999824888, 'hmm': 276.93819999694824, 'route': 2.6177999970968813, 'total': 945.75, 'scoring': 262.09}
+Top-1 Accuracy: 99.26% | Sequence F1: 0.9798
+Status: 200 OK | Duration: 946.6ms
+==================================================
+INFO:     127.0.0.1:38590 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:1072 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:2833 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:24769 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58964 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58968 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29735 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45949 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39038 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37565 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:10594 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63269 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36970 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36983 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54577 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:3988 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52659 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56803 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45553 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44774 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56936 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:23418 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37094 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:24300 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32098 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32101 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32102 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32105 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32106 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32111 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32112 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32114 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:04:01,807 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 20.615299999917625, 'candidates': 161.96059999856516, 'features': 95.67940000124509, 'model': 
+514.1642000016873, 'hmm': 740.1410000020405, 'route': 61.985899999854155, 'total': 2075.66, 'scoring': 455.96}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 2105.8ms
+==================================================
+INFO:     127.0.0.1:28540 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55891 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55896 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25798 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:4574 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42599 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11500 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31077 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:27617 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29131 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34437 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62389 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57976 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57980 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:05:02,346 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 40.288199998030905, 'candidates': 252.20029999763938, 'features': 190.07789999886882, 'model': 
+1555.5786000004446, 'hmm': 1363.0644000004395, 'route': 119.14050000268617, 'total': 4481.56, 'scoring': 883.98}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 4530.5ms
+==================================================
+INFO:     127.0.0.1:6969 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:23529 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:23533 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19087 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20873 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21112 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:27456 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13247 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31757 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31758 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31763 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36254 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:30892 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:30893 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31633 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:06:06,636 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 30.14149999944493, 'candidates': 291.3631000010355, 'features': 155.98600000157603, 'model': 
+920.2525000000605, 'hmm': 1233.1543000000238, 'route': 99.08180000275024, 'total': 3582.9, 'scoring': 805.12}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 3618.8ms
+==================================================
+INFO:     127.0.0.1:47347 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:17206 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:17208 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16878 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14611 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:18078 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25511 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25512 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25515 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25516 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25521 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25520 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:18853 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:06:51,308 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 19.70170000276994, 'candidates': 168.19810000015423, 'features': 120.01070000042091, 'model': 
+490.950100000191, 'hmm': 803.4149000013713, 'route': 62.3425000012503, 'total': 2177.6, 'scoring': 489.88}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 2209.3ms
+==================================================
+INFO:     127.0.0.1:53942 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62489 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62492 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48381 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42340 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25518 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:4927 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54465 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22361 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22363 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22366 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22367 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22371 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22372 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22375 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:08:15,684 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 38.55019999900833, 'candidates': 291.83199999897624, 'features': 156.91299999889452, 'model': 
+371.7691999991075, 'hmm': 992.5734999997076, 'route': 90.35030000086408, 'total': 2524.11, 'scoring': 586.1}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 2583.6ms
+==================================================
+INFO:     127.0.0.1:48629 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:26911 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:26913 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46563 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40804 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28995 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28997 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29000 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29001 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29006 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29007 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29009 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:09:02,952 [INFO] 
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 39.54489999887301, 'candidates': 275.4185999983747, 'features': 166.6557999997167, 'model': 
+375.5218000005698, 'hmm': 1046.3732999996864, 'route': 102.82410000218078, 'total': 2733.46, 'scoring': 747.42}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 2784.0ms
+==================================================
+INFO:     127.0.0.1:64094 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41518 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41520 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:25225 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6571 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42532 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42535 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42536 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42539 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42543 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42545 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42547 - "GET /trips HTTP/1.1" 200 OK
+C:\Users\thiji\OneDrive\Desktop\ML_Hackathon\ML-Hackathon\.venv\Lib\site-packages\sklearn\utils\validation.py:2823: 
+UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+2026-11-18 18:09:56,500 [INFO] 
+==================================================
+PathSnap Request: Trip=00000007 | Client=127.0.0.1
+Timings: {'load': 4.336400001193397, 'candidates': 103.80340000119759, 'features': 75.74009999734699, 'model': 
+164.92449999714154, 'hmm': 278.8552999991225, 'route': 3.2892999988689553, 'total': 1109.07, 'scoring': 410.91}
+Top-1 Accuracy: 99.26% | Sequence F1: 0.9798
+Status: 200 OK | Duration: 1126.0ms
+==================================================
+INFO:     127.0.0.1:61507 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57987 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57989 - "GET /trips HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52230 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:1740 - "GET /openapi.json HTTP/1.1" 200 OK
