@@ -48,7 +48,7 @@ Two things the organisers will look at hardest: **(a)** evidence that the work i
 (experiments, logs, git history, viva), and **(b)** the live two-laptop demo working on all ten
 hidden evaluation trips with no hardcoding and no ground-truth leakage.
 
-## 1.2 Red lines (read these twice — breaking any of them can disqualify the team)
+## 1.2 Red lines (read these twice)
 
 | # | Rule | How we enforce it |
 |---|------|-------------------|
