@@ -1,11 +1,30 @@
-batch_size: 512
-device: cpu
-dropout: 0.1
-epochs: 15
-hidden_dims:
-- 64
-- 32
-learning_rate: 0.001
-pos_weight: 4.0
-random_state: 42
-weight_decay: 0.0001
+model: mlp
+tag: mlp
+family: Neural
+params:
+  hidden_dims:
+  - 64
+  - 32
+  dropout: 0.1
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 512
+  epochs: 15
+  pos_weight: 4.0
+  random_state: 42
+  device: cpu
+seed: 42
+train_obs_frac: 1.0
+training_rows: label_reliable observations only
+features: 37
+scaling: artifacts/scaler.joblib (fit on train)
+n_train_rows_full: 1934576
+versions:
+  python: 3.11.9
+  numpy: 2.4.6
+  pandas: 3.1.1
+  scikit-learn: 1.9.1
+  lightgbm: 4.7.0
+  torch: 2.15.0+cpu
+  optuna: 5.1.0
+notes: ''
