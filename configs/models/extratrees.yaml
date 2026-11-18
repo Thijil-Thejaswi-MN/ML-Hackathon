@@ -1,0 +1,9 @@
+# Extra-Trees (M1) - untuned baseline configuration. Tuned values come from Bayesian optimisation (05_bayes_opt.py).
+n_estimators: 200          # more trees -> lower variance; diminishing returns past ~200
+max_depth: 18              # cap depth so the forest stays small enough to load in the API
+min_samples_leaf: 5        # smooths the vote-fraction probabilities (helps log loss / HMM emissions)
+max_features: sqrt         # features tried per split (~6 of 37)
+class_weight: null         # ~8% positives; keep natural rate so probabilities stay meaningful for the HMM
+max_samples: null          # set e.g. 0.3 to subsample rows per tree if training is slow
+random_state: 42
+n_jobs: -1
