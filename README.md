@@ -8,7 +8,7 @@
 | Data processing, labels, candidates, features | `src/pathsnap/{io,geo,graph,labels,candidates,features,dataset}.py`, `scripts/00–02a` | candidate miss rate 0.10 % (`results/data/build_log.json`) |
 | Five models + comparison | `src/pathsnap/models/`, `src/pathsnap/training.py`, `scripts/03–04` | best: LightGBM, Top-1 0.9014 (`results/model_comparison.csv`) |
 | Bayesian optimisation (Optuna TPE, 40 trials) | `scripts/05_bayes_opt.py`, `configs/bo.yaml`, `results/bo/lightgbm/` | tuned LightGBM Top-1 **0.9073**, macro F1 0.9441 |
-| HMM / Viterbi + route stitching | `src/pathsnap/decoding/`, `scripts/06–08` | `results/hmm/comparison_summary.json` |
+| HMM / Viterbi + route stitching | `src/pathsnap/decoding/`, `scripts/06–08` | **final: Top-1 0.9140**, continuity 0.889 (1.000 stitched) (`results/hmm/comparison_summary.json`) |
 | API (laptop 1) / UI (laptop 2) | `api/`, `ui/app.py`, `src/pathsnap/pipeline.py` | deployed model: `artifacts/manifest.json` |
 | Folium maps / plots | `src/pathsnap/viz/folium_maps.py`, `maps/`, `figures/` | |
 | Decisions, data notes, AI disclosure | `docs/DECISIONS.md`, `docs/DATA_NOTES.md`, `docs/AI_DISCLOSURE.md` | |
