@@ -104,7 +104,7 @@ Models & Training, Deliverables, Assessment & Plagiarism). "Owner" = accountable
 | 8 | **≥ 5 distinct models** trained, configs/seeds/logs recorded, all documented | Models §2, §4, §6 | M1–M4 (see §2.3) | `results/models/<name>/`, report §3 |
 | 9 | Models from multiple algorithm families | Models §3 | M1–M4 | table in §3.7 |
 | 10 | Consolidated comparison table with the 9 mandated columns (+ precision/recall/F1/efficiency) | Deliv. §3.1, Models §6 | M2 | `results/model_comparison.csv`, report §3.1 |
-| 11 | Per-model subsections answering compulsory questions A1–A2, B5–B6, C7–C9 | Deliv. §3.2 | model owner | `report/model_section_template.md` |
+| 11 | Per-model subsections answering compulsory questions A1–A2, B5–B6, C7–C9 | Deliv. §3.2 | model owner | `report/drafts/model_section_template.md` |
 | 12 | Plots: CV macro-F1 across models, student-test Top-1 & macro-F1, log-loss, confusion matrices, loss curves *only for models with epoch history*, model-comparison plots | Deliv. §3.3 | M2 | `figures/models/`, report §3.3 |
 | 13 | Metrics: Accuracy, Precision, Recall, F1, Confusion Matrix, Log Loss, Top-1, Candidate Miss Rate, Route Continuity, Sequence-level, Train time, Inference time | Models §5 | M2 (+M3 route metrics) | `src/pathsnap/metrics.py` |
 | 14 | Primary selection metric stated and justified | Models §5 | M2 | report §3, `docs/DECISIONS.md` |
@@ -498,7 +498,7 @@ organisers specify, plus those from Models §6:
 `Model | Algorithm family | Key configuration | CV Macro F1 (mean±std) | Top-1 accuracy | Route continuity | Student-Test Macro F1 | Log loss | Inference time` + `Precision | Recall | Train time | Model size`.
 Use `N/A` with a reason in the cell where a metric doesn't apply.
 
-**Per-model report subsection** — answer exactly (see `report/model_section_template.md`):
+**Per-model report subsection** — answer exactly (see `report/drafts/model_section_template.md`):
 A1 why suitable for PathSnap · A2 strengths/limitations · B5 important hyperparameters + initial
 values · B6 loss/objective · C7 student-test performance · C8 Top-1, Macro-F1, Log-loss on
 student-test · C9 over/underfitting with evidence (train vs CV vs student-test gap, curves).
@@ -691,6 +691,11 @@ set PATHSNAP_EVAL_DIR=D:\eval_trips                   # Windows cmd   (macOS/Lin
 uvicorn api.main:app --host 0.0.0.0 --port 8000 --log-level info
 ```
 
+- `PATHSNAP_EVAL_DIR` must be the folder that **directly** contains the trip folders (`<dir>/<trip_id>/<trip_id>.track`);
+  otherwise `/trips` returns 404 and the UI shows 0 trips.
+- **PowerShell** does not understand `set VAR=...`; use `$env:PATHSNAP_EVAL_DIR = "C:\eval_trips"` (and
+  `$env:PATHSNAP_API_URL = "http://<laptop1-ip>:8000"` on laptop 2). Run `uvicorn` from the repository folder with the venv active.
+- Open `http://localhost:8000/docs` (not `0.0.0.0`) to check the API in a browser.
 - Find the IP: `ipconfig` (Windows) / `ifconfig` or `ip a` (Linux/macOS).
 - **Allow inbound TCP 8000** in the firewall (Windows: Defender Firewall → inbound rule, or when prompted allow Python on *private* networks).
 - Check from Laptop 2: `curl http://<laptop1-ip>:8000/health`.

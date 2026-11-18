@@ -58,8 +58,16 @@ def main() -> None:
     ap.add_argument("--tags", nargs="*", help="subset / order of runs (default: all folders not starting with _)")
     args = ap.parse_args()
     base = Path(args.results)
-    dirs = [base / t for t in args.tags] if args.tags else sorted(
-        d for d in base.iterdir() if d.is_dir() and not d.name.startswith("_") and (d / "test.json").exists())
+    need = ("config.yaml", "cv.json", "test.json", "timing.json")
+    if args.tags:
+        dirs = [base / t for t in args.tags]
+    else:
+        dirs = []
+        for d in sorted(p for p in base.iterdir() if p.is_dir() and not p.name.startswith("_")):
+            if all((d / f).exists() for f in need):
+                dirs.append(d)
+            else:
+                print(f"[skip] {d.name}: not produced by scripts/03_train_model.py (missing {[f for f in need if not (d / f).exists()]})")
     df = pd.DataFrame([load_run(d) for d in dirs])
     df.to_csv(ROOT / "results/model_comparison.csv", index=False, encoding="utf-8")
 

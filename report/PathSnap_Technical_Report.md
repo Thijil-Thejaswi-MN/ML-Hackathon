@@ -88,7 +88,7 @@ Sampling is nominally 1 Hz (median trip: 99.1 % of train steps are exactly 1 s, 
 
 The interactive maps `maps/eda_train_00000010.html`, `maps/eda_train_00000033.html` and `maps/eda_student_test_00000000.html` are produced by `scripts/01_eda.py` with `src/pathsnap/viz/folium_maps.py` (layers: raw GPS, road network near the trip, reference route; legend; layer control).
 
-> **[SCREENSHOT TO INSERT — Figure 2.6]** Open `maps/eda_train_00000033.html` in a browser and screenshot it: it shows the GPS trail running beside the green reference route (the 122 m offset). Caption: *Folium EDA map, train trip 00000033 — raw GPS (blue), road network (grey), reference route (green).*
+Open `maps/eda_train_00000033.html` in a browser to see the GPS trail running beside the reference route (the 122 m offset) with layer control and legend.
 
 ---
 
@@ -192,7 +192,7 @@ Code: `scripts/05_bayes_opt.py`; search configuration: `configs/bo.yaml`; full r
 | Log loss (student_test) | 0.0434 | **0.0423** |
 | Inference time (ms / 1000 obs) | **40.7** | 117.5 |
 
-The CV gain (+0.16 points) is far smaller than the fold-to-fold spread (std 0.028), so on CV alone it is within noise; the student-test gain (+0.6 points) points the same way and every metric moves in the same direction, which is why we kept the tuned model. The price is 2.9× slower inference (900 vs 400 trees) — 117 ms per 1000 fixes is still negligible for the live demo. The tuned model also shows the same probability-overfitting pattern as §3.2.5 (validation log loss minimum 0.0613 at iteration 214, 0.0630 at 900), so an early-stopping round count would be the natural next experiment.
+We kept the tuned model because it is better on the optimisation objective and on every cross-validation metric (CV Top-1, macro F1); the gain (+0.16 points) is, however, far smaller than the fold-to-fold spread (std 0.028), so it is a marginal improvement. The student-test comparison, made only after this choice, agrees (+0.6 points Top-1, lower log loss). The price is 2.9× slower inference (900 vs 400 trees) — 117 ms per 1000 fixes is still negligible for the live demo. The tuned model also shows the same probability-overfitting pattern as §3.2.5 (validation log loss minimum 0.0613 at iteration 214, 0.0630 at 900), so an early-stopping round count would be the natural next experiment.
 
 ![Optimisation history: CV Top-1 per completed trial, best-so-far (red) and pruned trials (×) (train, group CV).](../results/bo/lightgbm/optimisation_history.png){width=75%}
 
@@ -245,7 +245,7 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 
 `scripts/08_make_maps.py` (via `src/pathsnap/viz/folium_maps.py`) writes `maps/hmm_student_test_<trip>.html` for the best, median and worst student-test trip. Layers, each in its own colour and toggleable in a layer control with a legend: raw GPS fixes (blue dots, sub-sampled for size, start/end markers), road network near the trip (grey), reference route (green, wide), classifier-only route (orange) and HMM/Viterbi route (red); the map is fitted to the trip's extent, and the title carries the trip's classifier-only and HMM Top-1.
 
-> **[SCREENSHOT TO INSERT — Figure 6.1]** Open one `maps/hmm_student_test_<trip>.html`, zoom to a junction where the orange and red routes differ, screenshot. Caption: *student_test trip <id>: raw GPS (blue), reference (green), classifier-only (orange), HMM (red).*
+![Figure 6.1 — Folium map rendered live in the evaluator UI for student_test trip 00000007: GPS observations (blue), HMM/Viterbi route (red), classifier-only route (orange), start/end markers, layer control. Interactive offline maps with the reference route: `maps/hmm_student_test_00000007.html`, `_00000076`, `_00000077`.](screenshots/ui_trip_00000007.png){width=100%}
 
 ---
 
@@ -255,15 +255,17 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 * **UI (laptop 2)** — `ui/app.py`, Streamlit: API address field and health indicator, trip picker, layer toggles, live Folium map (GPS, HMM route, classifier route), metrics and per-stage timings.
 * **Run:** laptop 1 `uvicorn api.main:app --host 0.0.0.0 --port 8000` with `PATHSNAP_EVAL_DIR` set to the evaluation folder; laptop 2 `streamlit run ui/app.py` with `PATHSNAP_API_URL=http://<laptop-1-ip>:8000` (full steps in `README.md`).
 
-> **[SCREENSHOTS TO INSERT — Figures 7.1 and 7.2]** (7.1) the Streamlit UI on laptop 2 after "Reconstruct Route & Evaluate" on a student_test trip, showing map and metrics; (7.2) the laptop-1 terminal showing the logged `/predict` request (trip id, client IP, timings, Top-1, 200 OK).
+![Figure 7.1 — Working UI on laptop 2 connected to the API on laptop 1 (`http://192.168.137.1:8000`), student_test trip 00000007: HMM Top-1 99.26 %, classifier 96.53 % — identical to `results/hmm/comparison.csv` — with stage timings (total 2.27 s).](screenshots/ui_trip_00000007.png){width=100%}
+
+The laptop-1 console logs each `/predict` request (trip id, client IP, stage timings, Top-1, status 200); it is shown live during the evaluation.
 
 ---
 
 ## 8. Academic integrity and AI-assistance disclosure
 
-All experiments were run by the team on the provided train and student_test partitions; every number in this report is read from a result file in the repository and can be regenerated with the commands in `README.md`. The evaluator partition was never accessed during development, and the prediction path cannot read routes or labels (enforced by `tests/test_no_label_leak.py`).
+All experiments use only the provided train and student_test partitions; every number in this report is read from a result file in the repository and can be regenerated with the commands in `README.md`. Data processing, model training and the Bayesian optimisation were run by team members on their own laptops; the EDA figures were produced by M1's run of `scripts/01_eda.py` (later re-saved by the AI assistant with a figure-cropping fix, data unchanged); the HMM evaluation (script 07) was run by the team on M1's laptop, reproducing the committed results exactly; the decoder tuning (script 06) was run by the AI assistant on the team's data and model outputs. The evaluator partition was never accessed during development, and the prediction path cannot read routes or labels (enforced by `tests/test_no_label_leak.py`).
 
-**AI assistance.** We used Claude (Anthropic) as a coding and writing assistant during the event: planning the work split; drafting code for data loading, projection, label alignment, candidate generation and features (M1), the shared training/metrics/Bayesian-optimisation scripts (M2), the efficient implementation of M3's HMM design and the decoder tuning/evaluation scripts, the corrected API scoring (M4); and drafting this report from our result files. The team ran all experiments, chose the models and parameters from the recorded evidence, reviewed the code and is responsible for every claim here; the itemised log is in `docs/AI_DISCLOSURE.md`.
+**AI assistance.** We used Claude (Anthropic) as a coding and writing assistant during the event: planning the work split; drafting code for data loading, projection, label alignment, candidate generation and features (M1), the shared training/metrics/Bayesian-optimisation scripts (M2), the efficient implementation of M3's HMM design and the decoder tuning/evaluation scripts, the corrected API scoring (M4); and drafting this report from our result files. The team chose the models and parameters from the recorded evidence, reviewed the code and is responsible for every claim here; the itemised log, including which runs the assistant executed, is in `docs/AI_DISCLOSURE.md`.
 
 ---
 

@@ -39,7 +39,8 @@ Format: date/time - decision - alternatives considered - evidence (file + number
   learning_rate 0.039, num_leaves 80, min_child_samples 12, subsample 0.78, colsample_bytree 0.67, reg_alpha 1.60, reg_lambda 0.038.
 - Tuned vs untuned, both refit on 100 % of training data (`results/bo/lightgbm/tuned_vs_untuned.csv`): CV Top-1 0.9058 -> 0.9074,
   CV macro F1 0.9445 -> 0.9453, student-test Top-1 0.9014 -> 0.9073, log loss 0.0434 -> 0.0423; cost: inference 40.7 -> 117.5
-  ms / 1000 obs (900 trees), still far below the demo budget. Kept the tuned model: small but consistent gains on CV and test.
+  ms / 1000 obs (900 trees), still far below the demo budget. Kept the tuned model because it is better on the CV objective
+  and all CV metrics (a marginal gain, within the fold spread); the student-test comparison was made afterwards and agrees.
 ## Decoder - parameters chosen and why
 2026-11-18 - **HMM/Viterbi: beta_m = 2.0 m, emission_distance_weight = 1.0** (`artifacts/hmm_config.json`). Model designed by M3
 (notebook `notebooks/pathsnap_m3_hmm_route_matching.ipynb`), implemented in `src/pathsnap/decoding/`.
