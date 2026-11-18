@@ -1,0 +1,6 @@
+# Bayesian optimisation (owner: M2). Fill the search space BEFORE running; add a justification per entry.
+sampler: tpe
+n_trials: 50
+objective: cv_top1_accuracy   # or cv_macro_f1 / cv_logloss -- decide at G3 and record in docs/DECISIONS.md
+cv: group_by_trip_frozen_folds
+search_space: {}              # e.g. learning_rate: {type: float, low: 0.01, high: 0.3, log: true, why: "..."}

@@ -1,0 +1,25 @@
+# Lower bounds only. Once the environment works for everyone:  pip freeze > requirements.lock.txt
+# and install on BOTH laptops from the lock file (pickled models break across library versions).
+numpy>=1.26
+pandas>=2.1
+pyarrow>=14
+scipy>=1.11
+scikit-learn>=1.4
+lightgbm>=4.3
+xgboost>=2.0          # optional model
+optuna>=3.5           # Bayesian (TPE) hyperparameter optimisation
+pyproj>=3.6
+shapely>=2.0
+matplotlib>=3.8
+seaborn>=0.13
+folium>=0.16
+pyyaml>=6.0
+joblib>=1.3
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.5
+requests>=2.31
+streamlit>=1.32
+streamlit-folium>=0.19
+pytest>=8.0
+# torch>=2.2          # only if the MLP is written in PyTorch (sklearn MLPClassifier also works)

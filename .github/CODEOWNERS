@@ -1,0 +1,6 @@
+# Replace with the real GitHub usernames of M1..M4
+/src/pathsnap/io.py /src/pathsnap/geo.py /src/pathsnap/labels.py /src/pathsnap/candidates.py /src/pathsnap/features.py /src/pathsnap/dataset.py @M1
+/scripts/00_inventory.py /scripts/01_eda.py /scripts/02_build_dataset.py @M1
+/src/pathsnap/metrics.py /src/pathsnap/models/ /scripts/03_train_model.py /scripts/04_compare_models.py /scripts/05_bayes_opt.py /scripts/09_export_artifacts.py @M2
+/src/pathsnap/graph.py /src/pathsnap/decoding/ /src/pathsnap/viz/ /scripts/06_tune_decoder.py /scripts/07_eval_hmm.py /scripts/08_make_maps.py @M3
+/src/pathsnap/pipeline.py /src/pathsnap/artifacts.py /api/ /ui/ /tests/ /configs/global.yaml /requirements.txt @M4

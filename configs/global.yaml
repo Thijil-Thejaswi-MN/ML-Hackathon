@@ -1,0 +1,18 @@
+# Shared settings (owner: M4). Change via small PR + message to the team.
+seed: 42
+paths:
+  raw_root: "data/raw/Student folder"
+  processed: "data/processed"
+  artifacts: "artifacts"
+  results: "results"
+splits: {train: train, student_test: student_test}
+cv:
+  n_splits: 5            # group-aware (by trip_id); folds frozen in data/processed/folds.json
+projection: local_per_trip   # justify in report (see README 3.1)
+candidates:                  # M1: choose from candidate-miss-rate evidence, then freeze
+  radii_m: [50, 100, 200]
+  k_max: 12
+  k_min: 3
+features:
+  heading_window: 5          # M1: tune/justify
+  neighbour_window: 5

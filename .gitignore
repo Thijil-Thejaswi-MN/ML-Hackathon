@@ -1,0 +1,21 @@
+# data (never commit raw / processed / evaluator data)
+data/raw/
+data/processed/
+*.parquet
+eval_trips/
+# environments / caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.streamlit/secrets.toml
+# secrets
+.env
+*.key
+*.pem
+# large logs / optuna dbs over a few MB: decide per file, keep results/bo/trials.csv
+*.log
+!results/**/train.log
+.DS_Store

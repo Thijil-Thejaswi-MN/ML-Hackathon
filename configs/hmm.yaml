@@ -1,0 +1,10 @@
+# Decoder parameters (owner: M3). Initial values are starting points ONLY; tune on train OOF probs + student-test.
+beta_m: 50.0           # transition scale
+epsilon: 1.0e-6        # floor for unreachable transitions
+t_gap_s: 30.0          # chain break threshold
+v_max_mps: 40.0        # for bounded shortest-path cutoff
+dijkstra_slack_m: 100.0
+backward_penalty: 5.0
+emission_distance_weight: 0.0   # lambda; 0 = classifier probability only
+emission_sigma_m: 20.0
+use_calibrated_probs: false
