@@ -61,7 +61,7 @@ def main() -> None:
     dirs = [base / t for t in args.tags] if args.tags else sorted(
         d for d in base.iterdir() if d.is_dir() and not d.name.startswith("_") and (d / "test.json").exists())
     df = pd.DataFrame([load_run(d) for d in dirs])
-    df.to_csv(ROOT / "results/model_comparison.csv", index=False)
+    df.to_csv(ROOT / "results/model_comparison.csv", index=False, encoding="utf-8")
 
     # the organisers' 9-column table (report section 3.1), formatted
     fmt = pd.DataFrame({
@@ -73,12 +73,12 @@ def main() -> None:
         "Log Loss": [f"{v:.4f}" for v in df["Log loss (student-test)"]],
         "Inference Time (ms/1000 obs)": [f"{v:.1f}" for v in df["Inference time (ms / 1000 obs)"]],
     })
-    fmt.to_csv(ROOT / "results/model_comparison_report_table.csv", index=False)
+    fmt.to_csv(ROOT / "results/model_comparison_report_table.csv", index=False, encoding="utf-8")
     try:
         md = fmt.to_markdown(index=False)          # needs the optional 'tabulate' package
     except ImportError:
         md = fmt.to_string(index=False)
-    (ROOT / "results/model_comparison_report_table.md").write_text(md)
+    (ROOT / "results/model_comparison_report_table.md").write_text(md, encoding="utf-8")
 
     out = ROOT / "figures/models"
     out.mkdir(parents=True, exist_ok=True)
