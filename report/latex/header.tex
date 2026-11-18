@@ -1,0 +1,58 @@
+% ---- PathSnap report: layout & typography (XeLaTeX) ----
+\usepackage{fontspec}
+% Body: TeX Gyre Pagella (Palatino design); headings, header and footer: Fira Sans; code: DejaVu Sans Mono.
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{Fira Sans}[BoldFont={Fira Sans SemiBold}, ItalicFont={Fira Sans Italic}]
+\setmonofont{DejaVu Sans Mono}[Scale=0.80]
+\usepackage[a4paper,top=24mm,bottom=24mm,left=22mm,right=22mm,headheight=14pt]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{1F5FA8}
+\definecolor{codecol}{HTML}{8A2C0D}
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{rule}{HTML}{BBBBBB}
+\usepackage{needspace}
+\usepackage{titlesec}
+\titleformat{\section}{\needspace{10\baselineskip}\sffamily\Large\bfseries\color{accent}}{\thesection}{0.7em}{}[{\color{accent}\titlerule[0.8pt]}]
+\titleformat{\subsection}{\needspace{7\baselineskip}\sffamily\large\bfseries\color{accent}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\needspace{5\baselineskip}\sffamily\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{14pt}{8pt}
+\titlespacing*{\subsection}{0pt}{11pt}{5pt}
+\titlespacing*{\subsubsection}{0pt}{9pt}{4pt}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\color{accent}PathSnap --- Technical Report}
+\fancyhead[R]{\sffamily\footnotesize\color{gray}\nouppercase{\leftmark}}
+\fancyfoot[L]{\sffamily\footnotesize\color{gray}PES University $\cdot$ UE24CS352A Machine Learning Hackathon}
+\fancyfoot[R]{\sffamily\footnotesize Page \thepage\ of \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rule}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\quad #1}{}}
+% every page carries the same header/footer (LaTeX would otherwise switch some pages to 'plain')
+\makeatletter\let\ps@plain\ps@fancy\let\ps@empty\ps@fancy\makeatother
+\usepackage{float}
+\floatplacement{figure}{H}
+\usepackage{caption}
+\captionsetup{font=small,labelfont={bf,sf,color=accent},labelsep=period,justification=justified,singlelinecheck=true}
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\usepackage{booktabs,longtable,array,colortbl}
+\usepackage{etoolbox}
+\newcommand{\tablefont}{\small}
+\AtBeginEnvironment{longtable}{\tablefont\renewcommand{\arraystretch}{1.18}}
+\setlength{\LTpre}{6pt}\setlength{\LTpost}{8pt}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,
+        backgroundcolor=\color{codebg},frame=single,rulecolor=\color{rule},framesep=4pt,xleftmargin=4pt,xrightmargin=4pt,
+        aboveskip=6pt,belowskip=8pt,showstringspaces=false}
+\newcommand{\code}[1]{{\ttfamily\color{codecol}#1}}
+\usepackage{xurl}
+\usepackage{hyperref}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.15}
+\providecommand{\tightlist}{\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}}

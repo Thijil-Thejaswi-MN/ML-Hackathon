@@ -1,0 +1,79 @@
+% ---- cover page ----
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,pdftitle={PathSnap - Technical Report},pdfauthor={Team PathSnap}}
+\thispagestyle{fancy}
+\markboth{}{}
+\vspace*{6mm}
+{\sffamily\color{accent}\rule{\textwidth}{2pt}\par}
+\vspace{10mm}
+{\sffamily\large\color{gray} PES University \,$\cdot$\, UE24CS352A Machine Learning \,$\cdot$\, Hackathon\par}
+\vspace{6mm}
+{\sffamily\fontsize{34}{40}\selectfont\bfseries\color{accent} PathSnap\par}
+\vspace{3mm}
+{\sffamily\fontsize{18}{24}\selectfont Map-Matching Noisy GPS Trajectories\\[2pt] with Candidate Classification and HMM/Viterbi Decoding\par}
+\vspace{6mm}
+{\sffamily\large Technical Report\par}
+\vspace{14mm}
+{\sffamily\small\color{gray} TEAM\par}
+\vspace{2mm}
+\begin{tabular}{@{}p{60mm}p{102mm}@{}}
+\toprule
+\textbf{Thijil Thejaswi M N} (M1) & Data understanding, preprocessing, labels, candidates, features; report \\
+\textbf{Sunidhi Shekar} (M2) & Models, metrics, cross-validation, Bayesian optimisation \\
+\textbf{Tasya} (M3) & HMM / Viterbi route-reconstruction design \\
+\textbf{Uthkarsha} (M4) & FastAPI backend, Streamlit evaluator UI, deployment \\
+\bottomrule
+\end{tabular}
+\vspace{12mm}
+
+{\sffamily\small\color{gray} REPOSITORY\par}
+\vspace{1mm}
+\url{https://github.com/Thijil-Thejaswi-MN/ML-Hackathon}\par
+\vfill
+{\small\color{gray} Every number, table and figure in this report is produced by code in the repository above;
+the file holding each result is cited next to it. Development used only the \emph{train} (80 trips) and
+\emph{student\_test} (10 trips) partitions; the evaluator partition was used only for the live evaluation.\par}
+\vspace{4mm}
+{\sffamily\color{accent}\rule{\textwidth}{2pt}\par}
+\newpage
+
+% ---- executive summary ----
+\section*{Executive summary}
+\addcontentsline{toc}{section}{Executive summary}
+\markboth{Executive summary}{}
+Each trip provides a 1\,Hz GPS track and the trip's own directed road network; the task is to assign one road arc to
+every GPS observation and return a connected route. We project each trip to local metres, derive one reference arc per
+observation from the given route with a monotone dynamic programme, generate up to 30 candidate arcs per observation
+(adaptive 50--200\,m radius), describe every observation--candidate pair with 37 features, and train a binary
+classifier that scores how likely each candidate is the true arc. An HMM decoded with the Viterbi algorithm then picks
+the most plausible \emph{connected} sequence of arcs, and a shortest-path step stitches it into a continuous route. The
+full pipeline is served by a FastAPI service on laptop~1 and driven from a Streamlit evaluator UI on laptop~2.
+
+Five models were trained under one protocol (5-fold cross-validation grouped by trip); LightGBM was best on every
+selection criterion and was tuned with 40 trials of Bayesian optimisation (Optuna TPE).
+
+\begin{center}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{student\_test (10 trips, evaluated once)} & \textbf{Top-1 accuracy} & \textbf{Route continuity} \\
+\midrule
+Nearest arc to each GPS fix (baseline) & 0.5322 & --- \\
+Tuned LightGBM, classifier only & 0.9073 & 0.802 \\
+\textbf{Tuned LightGBM + HMM/Viterbi (deployed)} & \textbf{0.9140} & \textbf{0.889}\; (1.000 stitched) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Candidates:} the true arc is among the candidates for 99.90\,\% of student\_test observations.
+\item \textbf{Classifier:} tuned LightGBM reaches CV macro F1 0.9453\,$\pm$\,0.0151 on train and 0.9441 on
+student\_test, with log loss 0.0423.
+\item \textbf{HMM:} improves Top-1 on 7 of 10 trips and raises the arc-set F1 of the route against the reference from
+0.891 to 0.965; decoding costs 253\,ms per 1000 observations.
+\item \textbf{Deployment:} the live two-laptop system reproduces the offline numbers exactly (e.g.\ trip 00000007: 99.26\,\%
+HMM, 96.53\,\% classifier).
+\end{itemize}
+
+\newpage
+{\hypersetup{linkcolor=black}\tableofcontents}
+\newpage
