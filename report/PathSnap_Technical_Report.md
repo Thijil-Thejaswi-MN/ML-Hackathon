@@ -88,7 +88,7 @@ Sampling is nominally 1 Hz (median trip: 99.1 % of train steps are exactly 1 s, 
 
 The interactive maps `maps/eda_train_00000010.html`, `maps/eda_train_00000033.html` and `maps/eda_student_test_00000000.html` are produced by `scripts/01_eda.py` with `src/pathsnap/viz/folium_maps.py` (layers: raw GPS, road network near the trip, reference route; legend; layer control).
 
-Open `maps/eda_train_00000033.html` in a browser to see the GPS trail running beside the reference route (the 122 m offset) with layer control and legend.
+![Figure 2.6 — Folium EDA map, train trip 00000033 (`maps/eda_train_00000033.html`): raw GPS fixes (blue), road network near the trip (grey), reference route (green), start/end markers, legend and layer control. This is the trip whose GPS trail runs ~122 m beside its reference route.](screenshots/map_eda_00000033.png){width=100%}
 
 ---
 
@@ -206,7 +206,7 @@ Code: `src/pathsnap/decoding/hmm.py` (decoder), `src/pathsnap/decoding/route.py`
 
 1. **Hidden states.** For each GPS observation, its candidate arcs (≈ 11.6 on average). The decoded state sequence is one arc per observation.
 2. **Emission probabilities.** The classifier probability *p* of the candidate, optionally combined with a Gaussian GPS-distance term: log e = log p − λ·d² / (2σ²), normalised over the observation's candidates (σ = 20 m; λ tuned, below).
-3. **Transition probabilities.** Following Newson & Krumm: compare the along-network distance between the two positions with the straight-line GPS displacement, log T = −|d<sub>network</sub> − d<sub>GPS</sub>| / β. d<sub>network</sub> = remaining length of arc *a* + shortest path from *a*'s end node to *b*'s start node + covered length of arc *b* (or the along-arc distance when *a* = *b*). Shortest paths are bounded Dijkstra searches on the directed road graph, computed **once per trip** for all candidate end-nodes and stored in a lookup table, so each Viterbi step is a vectorised K × K operation (< 0.5 s per student-test trip). Moving backwards along the same directed arc costs an extra penalty (5).
+3. **Transition probabilities.** Following Newson & Krumm: compare the along-network distance between the two positions with the straight-line GPS displacement, log T = −|d<sub>network</sub> − d<sub>GPS</sub>| / β. d<sub>network</sub> = remaining length of arc *a* + shortest path from *a*'s end node to *b*'s start node + covered length of arc *b* (or the along-arc distance when *a* = *b*). Shortest paths are bounded Dijkstra searches on the directed road graph, computed **once per trip** for all candidate end-nodes and stored in a lookup table, so each Viterbi step is a vectorised K × K operation (0.05–1.05 s per student-test trip on the team laptop). Moving backwards along the same directed arc costs an extra penalty (5).
 4. **Missing candidates and large gaps.** Observations without candidates, or a time gap > 30 s, end the current chain; each chain is decoded separately and reported as a break. Fixes without candidates take the arc of the nearest decoded fix and are marked unmatched.
 5. **Disconnected segments.** A transition whose network path is longer than v<sub>max</sub>·Δt + slack (40 m/s, 100 m) is unreachable and gets log ε (ε = 10⁻⁶) instead of −∞, so Viterbi can still cross a genuine gap in the network rather than fail. After decoding, consecutive decoded arcs that do not connect are joined by the shortest network path (≤ 3 km); joins that do not exist are left as gaps and counted.
 6. **Did the HMM help?** Decoder parameters were tuned on **train out-of-fold probabilities** of the final model (grid β ∈ {0.5, 1, 2, 5, 10, 20, 50} m × λ ∈ {0, 1}; `results/hmm/decoder_tuning.csv`), and student_test was decoded once with the chosen configuration (`results/hmm/comparison.csv`):
@@ -229,7 +229,7 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 | Route continuity (raw decoded sequence) | 0.802 | **0.889** |
 | Route continuity after shortest-path stitching | — | **1.000** (0.9987 on trip 56) |
 | Arc-set F1 of the route vs the reference route | 0.891 | **0.965** |
-| Decode time | — | 92 ms per 1000 fixes (0.02–0.46 s per trip) |
+| Decode time | — | 253 ms per 1000 fixes (0.05–1.05 s per trip) |
 
 **Yes, HMM decoding improved the route**: +0.67 points Top-1, and above all a far more coherent route (continuity +8.7 points; arc-set F1 +7.4 points, because isolated wrong arcs — mostly reverse twins and short side streets — are removed). Per trip (figure 5.1) it improved **7 of 10 trips** (largest gains: trip 07 0.965 → 0.993, trip 76 0.911 → 0.935), left trip 52 unchanged and **made two trips slightly worse**: trip 40 (0.945 → 0.937) and trip 77 (0.828 → 0.823).
 
@@ -245,7 +245,7 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 
 `scripts/08_make_maps.py` (via `src/pathsnap/viz/folium_maps.py`) writes `maps/hmm_student_test_<trip>.html` for the best, median and worst student-test trip. Layers, each in its own colour and toggleable in a layer control with a legend: raw GPS fixes (blue dots, sub-sampled for size, start/end markers), road network near the trip (grey), reference route (green, wide), classifier-only route (orange) and HMM/Viterbi route (red); the map is fitted to the trip's extent, and the title carries the trip's classifier-only and HMM Top-1.
 
-![Figure 6.1 — Folium map rendered live in the evaluator UI for student_test trip 00000007: GPS observations (blue), HMM/Viterbi route (red), classifier-only route (orange), start/end markers, layer control. Interactive offline maps with the reference route: `maps/hmm_student_test_00000007.html`, `_00000076`, `_00000077`.](screenshots/ui_trip_00000007.png){width=100%}
+![Figure 6.1 — `maps/hmm_student_test_00000076.html` (student_test trip 00000076), zoomed to a place where the classifier-only route (orange) turns onto a side road while the HMM/Viterbi route (red) stays on the avenue together with the reference route (green); legend and layer control visible.](screenshots/map_hmm_00000076.png){width=100%}
 
 ---
 
@@ -255,17 +255,42 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 * **UI (laptop 2)** — `ui/app.py`, Streamlit: API address field and health indicator, trip picker, layer toggles, live Folium map (GPS, HMM route, classifier route), metrics and per-stage timings.
 * **Run:** laptop 1 `uvicorn api.main:app --host 0.0.0.0 --port 8000` with `PATHSNAP_EVAL_DIR` set to the evaluation folder; laptop 2 `streamlit run ui/app.py` with `PATHSNAP_API_URL=http://<laptop-1-ip>:8000` (full steps in `README.md`).
 
-![Figure 7.1 — Working UI on laptop 2 connected to the API on laptop 1 (`http://192.168.137.1:8000`), student_test trip 00000007: HMM Top-1 99.26 %, classifier 96.53 % — identical to `results/hmm/comparison.csv` — with stage timings (total 2.27 s).](screenshots/ui_trip_00000007.png){width=100%}
+![Figure 7.1 — Two-laptop deployment: the UI on laptop 2 connected over the network to the API on laptop 1 (`http://192.168.137.1:8000`), student_test trip 00000007: HMM Top-1 99.26 %, classifier 96.53 % — identical to `results/hmm/comparison.csv`.](screenshots/ui_two_laptops_trip_00000007.png){width=100%}
 
-The laptop-1 console logs each `/predict` request (trip id, client IP, stage timings, Top-1, status 200); it is shown live during the evaluation.
+![Figure 7.2 — Full UI page for student_test trip 00000076 (API at `localhost:8000`): HMM Top-1 93.54 %, classifier 91.05 %, route continuity 85.2 %, live Folium map with GPS, HMM and classifier routes, stage timings and trip statistics.](screenshots/ui_trip_00000076.png){width=88%}
+
+![Figure 7.3 — FastAPI interactive documentation (`/docs`) of the API on laptop 1: `GET /health`, `GET /trips`, `POST /predict` and the request/response schemas.](screenshots/api_docs.png){width=80%}
+
+**API console on the receiving laptop.** Every `/predict` call is logged by the API process; the full console output of the screenshot session is committed as `report/screenshots/api_console_log.txt` (9 `/predict` requests, all `200 OK`). Excerpt (timings shortened, otherwise verbatim):
+
+```
+2026-11-18 17:58:56,987 [INFO] Loaded bundle from artifacts (manifest: {'model_tag': 'lightgbm_tuned', 'model_file': 'model.joblib', 'model_class': 'LightGBMModel', ...})
+INFO:     Application startup complete.
+==================================================
+PathSnap Request: Trip=00000076 | Client=127.0.0.1
+Timings: {'load': 23.1, 'candidates': 262.9, 'features': 157.9, 'model': 614.8, 'hmm': 1312.4, 'route': 110.0, 'total': 3352.06, 'scoring': 827.74}
+Top-1 Accuracy: 93.54% | Sequence F1: 0.9492
+Status: 200 OK | Duration: 3410.4ms
+==================================================
+INFO:     127.0.0.1:38590 - "POST /predict HTTP/1.1" 200 OK
+==================================================
+PathSnap Request: Trip=00000007 | Client=127.0.0.1
+Timings: {'load': 2.0, 'candidates': 65.4, 'features': 62.0, 'model': 168.5, 'hmm': 276.9, 'route': 2.6, 'total': 945.75, 'scoring': 262.09}
+Top-1 Accuracy: 99.26% | Sequence F1: 0.9798
+Status: 200 OK | Duration: 946.6ms
+==================================================
+INFO:     127.0.0.1:38590 - "POST /predict HTTP/1.1" 200 OK
+```
+
+During the evaluation the same console is shown live on laptop 1 while the evaluator drives the UI on laptop 2.
 
 ---
 
 ## 8. Academic integrity and AI-assistance disclosure
 
-All experiments use only the provided train and student_test partitions; every number in this report is read from a result file in the repository and can be regenerated with the commands in `README.md`. Data processing, model training and the Bayesian optimisation were run by team members on their own laptops; the EDA figures were produced by M1's run of `scripts/01_eda.py` (later re-saved by the AI assistant with a figure-cropping fix, data unchanged); the HMM evaluation (script 07) was run by the team on M1's laptop, reproducing the committed results exactly; the decoder tuning (script 06) was run by the AI assistant on the team's data and model outputs. The evaluator partition was never accessed during development, and the prediction path cannot read routes or labels (enforced by `tests/test_no_label_leak.py`).
+All experiments use only the provided train and student_test partitions; every number in this report is read from a result file in the repository and can be regenerated with the commands in `README.md`. Data processing, model training and the Bayesian optimisation were run by team members on their own laptops; the EDA figures were produced by M1's run of `scripts/01_eda.py` (later re-saved by the AI assistant with a figure-cropping fix, data unchanged); the decoder tuning and HMM evaluation (scripts 06–07) were run by the team on M1's laptop (the committed `results/hmm/` files come from that run; the AI assistant had reproduced the same results independently). The evaluator partition was never accessed during development, and the prediction path cannot read routes or labels (enforced by `tests/test_no_label_leak.py`).
 
-**AI assistance.** We used Claude (Anthropic) as a coding and writing assistant during the event: planning the work split; drafting code for data loading, projection, label alignment, candidate generation and features (M1), the shared training/metrics/Bayesian-optimisation scripts (M2), the efficient implementation of M3's HMM design and the decoder tuning/evaluation scripts, the corrected API scoring (M4); and drafting this report from our result files. The team chose the models and parameters from the recorded evidence, reviewed the code and is responsible for every claim here; the itemised log, including which runs the assistant executed, is in `docs/AI_DISCLOSURE.md`.
+**AI assistance.** We used Claude (Anthropic) as a coding and writing assistant during the event: planning the work split; drafting code for data loading, projection, label alignment, candidate generation and features (M1), the shared training/metrics/Bayesian-optimisation scripts (M2), the efficient implementation of M3's HMM design and the decoder tuning/evaluation scripts, the corrected API scoring (M4); and drafting this report from our result files. The screenshots of the running system (figures 2.6, 6.1, 7.2, 7.3) were captured with the Antigravity browser agent on M1's laptop; figure 7.1 was taken by hand on laptop 2. The team chose the models and parameters from the recorded evidence, reviewed the code and is responsible for every claim here; the itemised log, including which runs the assistant executed, is in `docs/AI_DISCLOSURE.md`.
 
 ---
 
