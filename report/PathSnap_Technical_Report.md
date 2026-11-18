@@ -88,7 +88,7 @@ Sampling is nominally 1 Hz (median trip: 99.1 % of train steps are exactly 1 s, 
 
 The interactive maps `maps/eda_train_00000010.html`, `maps/eda_train_00000033.html` and `maps/eda_student_test_00000000.html` are produced by `scripts/01_eda.py` with `src/pathsnap/viz/folium_maps.py` (layers: raw GPS, road network near the trip, reference route; legend; layer control).
 
-> **[SCREENSHOT TO INSERT — Figure 2.6]** Open `maps/eda_train_00000033.html` in a browser and screenshot it: it shows the GPS trail running beside the green reference route (the 122 m offset). Caption: *Folium EDA map, train trip 00000033 — raw GPS (blue), road network (grey), reference route (green).*
+Open `maps/eda_train_00000033.html` in a browser to see the GPS trail running beside the reference route (the 122 m offset) with layer control and legend.
 
 ---
 
@@ -245,7 +245,7 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 
 `scripts/08_make_maps.py` (via `src/pathsnap/viz/folium_maps.py`) writes `maps/hmm_student_test_<trip>.html` for the best, median and worst student-test trip. Layers, each in its own colour and toggleable in a layer control with a legend: raw GPS fixes (blue dots, sub-sampled for size, start/end markers), road network near the trip (grey), reference route (green, wide), classifier-only route (orange) and HMM/Viterbi route (red); the map is fitted to the trip's extent, and the title carries the trip's classifier-only and HMM Top-1.
 
-> **[SCREENSHOT TO INSERT — Figure 6.1]** Open one `maps/hmm_student_test_<trip>.html`, zoom to a junction where the orange and red routes differ, screenshot. Caption: *student_test trip <id>: raw GPS (blue), reference (green), classifier-only (orange), HMM (red).*
+![Figure 6.1 — Folium map rendered live in the evaluator UI for student_test trip 00000007: GPS observations (blue), HMM/Viterbi route (red), classifier-only route (orange), start/end markers, layer control. Interactive offline maps with the reference route: `maps/hmm_student_test_00000007.html`, `_00000076`, `_00000077`.](screenshots/ui_trip_00000007.png){width=100%}
 
 ---
 
@@ -255,7 +255,9 @@ The optimum β = 2 m lies inside the grid; the GPS-distance emission term adds l
 * **UI (laptop 2)** — `ui/app.py`, Streamlit: API address field and health indicator, trip picker, layer toggles, live Folium map (GPS, HMM route, classifier route), metrics and per-stage timings.
 * **Run:** laptop 1 `uvicorn api.main:app --host 0.0.0.0 --port 8000` with `PATHSNAP_EVAL_DIR` set to the evaluation folder; laptop 2 `streamlit run ui/app.py` with `PATHSNAP_API_URL=http://<laptop-1-ip>:8000` (full steps in `README.md`).
 
-> **[SCREENSHOTS TO INSERT — Figures 7.1 and 7.2]** (7.1) the Streamlit UI on laptop 2 after "Reconstruct Route & Evaluate" on a student_test trip, showing map and metrics; (7.2) the laptop-1 terminal showing the logged `/predict` request (trip id, client IP, timings, Top-1, 200 OK).
+![Figure 7.1 — Working UI on laptop 2 connected to the API on laptop 1 (`http://192.168.137.1:8000`), student_test trip 00000007: HMM Top-1 99.26 %, classifier 96.53 % — identical to `results/hmm/comparison.csv` — with stage timings (total 2.27 s).](screenshots/ui_trip_00000007.png){width=100%}
+
+The laptop-1 console logs each `/predict` request (trip id, client IP, stage timings, Top-1, status 200); it is shown live during the evaluation.
 
 ---
 
