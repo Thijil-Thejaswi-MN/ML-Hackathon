@@ -1,0 +1,174 @@
+{
+ "partition": "student_test (10 trips), evaluated once",
+ "threshold": 0.45,
+ "reliable": {
+  "threshold": 0.45,
+  "precision": 0.9047341046598025,
+  "recall": 0.8909737103433858,
+  "f1_pos": 0.8978011849901251,
+  "macro_f1": 0.9440699572310517,
+  "accuracy": 0.9823463321218517,
+  "log_loss": 0.04234212267385266,
+  "confusion_matrix": [
+   [
+    198913,
+    1795
+   ],
+   [
+    2086,
+    17047
+   ]
+  ],
+  "n_rows": 219841,
+  "top1": 0.9085872576177285,
+  "n_obs": 19133,
+  "top1_given_hit": 0.9085872576177285,
+  "candidate_miss_rate": 0.0
+ },
+ "all": {
+  "threshold": 0.45,
+  "precision": 0.903439503948275,
+  "recall": 0.8906013269944099,
+  "f1_pos": 0.8969744803998948,
+  "macro_f1": 0.9436177805159898,
+  "accuracy": 0.982204368018759,
+  "log_loss": 0.04315486113563825,
+  "confusion_matrix": [
+   [
+    199091,
+    1822
+   ],
+   [
+    2094,
+    17047
+   ]
+  ],
+  "n_rows": 220054,
+  "top1": 0.9073068893528183,
+  "n_obs": 19160,
+  "top1_given_hit": 0.9082075126691396,
+  "candidate_miss_rate": 0.0009916492693110568
+ },
+ "classifier_only_route": {
+  "continuity_strict": 0.8019096348152128,
+  "continuity_relaxed": 0.9483954671847983,
+  "arc_precision": 0.9259740387726335,
+  "arc_recall": 0.8618407962063392,
+  "arc_f1": 0.8905883467168028,
+  "seq_similarity": 0.806821913275779,
+  "n_pred_arcs": 386.3,
+  "n_ref_arcs": 347.7
+ },
+ "per_trip_route": [
+  {
+   "trip_id": "00000000",
+   "continuity_strict": 0.7947598253275109,
+   "continuity_relaxed": 0.9082969432314411,
+   "arc_precision": 0.9,
+   "arc_recall": 0.9553072625698324,
+   "arc_f1": 0.926829268292683,
+   "seq_similarity": 0.8361858190709046,
+   "n_pred_arcs": 230,
+   "n_ref_arcs": 179
+  },
+  {
+   "trip_id": "00000007",
+   "continuity_strict": 0.9671052631578947,
+   "continuity_relaxed": 1.0,
+   "arc_precision": 0.9833333333333333,
+   "arc_recall": 0.959349593495935,
+   "arc_f1": 0.97119341563786,
+   "seq_similarity": 0.855072463768116,
+   "n_pred_arcs": 153,
+   "n_ref_arcs": 123
+  },
+  {
+   "trip_id": "00000009",
+   "continuity_strict": 0.7358490566037735,
+   "continuity_relaxed": 0.9622641509433962,
+   "arc_precision": 0.9065934065934066,
+   "arc_recall": 0.7692307692307693,
+   "arc_f1": 0.832282471626734,
+   "seq_similarity": 0.8214731585518102,
+   "n_pred_arcs": 372,
+   "n_ref_arcs": 429
+  },
+  {
+   "trip_id": "00000040",
+   "continuity_strict": 0.859375,
+   "continuity_relaxed": 0.9713541666666666,
+   "arc_precision": 0.9449838187702265,
+   "arc_recall": 0.9449838187702265,
+   "arc_f1": 0.9449838187702264,
+   "seq_similarity": 0.8414985590778098,
+   "n_pred_arcs": 385,
+   "n_ref_arcs": 309
+  },
+  {
+   "trip_id": "00000052",
+   "continuity_strict": 0.8354430379746836,
+   "continuity_relaxed": 0.9620253164556962,
+   "arc_precision": 0.9625,
+   "arc_recall": 0.8105263157894737,
+   "arc_f1": 0.88,
+   "seq_similarity": 0.88,
+   "n_pred_arcs": 80,
+   "n_ref_arcs": 95
+  },
+  {
+   "trip_id": "00000056",
+   "continuity_strict": 0.7475247524752475,
+   "continuity_relaxed": 0.8927392739273927,
+   "arc_precision": 0.953763440860215,
+   "arc_recall": 0.8305243445692884,
+   "arc_f1": 0.8878878878878879,
+   "seq_similarity": 0.8493690851735016,
+   "n_pred_arcs": 1213,
+   "n_ref_arcs": 1323
+  },
+  {
+   "trip_id": "00000065",
+   "continuity_strict": 0.8251748251748252,
+   "continuity_relaxed": 0.951048951048951,
+   "arc_precision": 0.8985507246376812,
+   "arc_recall": 0.8551724137931035,
+   "arc_f1": 0.8763250883392227,
+   "seq_similarity": 0.8581314878892734,
+   "n_pred_arcs": 144,
+   "n_ref_arcs": 145
+  },
+  {
+   "trip_id": "00000076",
+   "continuity_strict": 0.717391304347826,
+   "continuity_relaxed": 0.9239130434782609,
+   "arc_precision": 0.9037900874635568,
+   "arc_recall": 0.8288770053475936,
+   "arc_f1": 0.8647140864714087,
+   "seq_similarity": 0.8344549125168237,
+   "n_pred_arcs": 369,
+   "n_ref_arcs": 374
+  },
+  {
+   "trip_id": "00000077",
+   "continuity_strict": 0.8105849582172702,
+   "continuity_relaxed": 0.9986072423398329,
+   "arc_precision": 0.8780487804878049,
+   "arc_recall": 0.9402985074626866,
+   "arc_f1": 0.908108108108108,
+   "seq_similarity": 0.5106382978723404,
+   "n_pred_arcs": 719,
+   "n_ref_arcs": 268
+  },
+  {
+   "trip_id": "00000091",
+   "continuity_strict": 0.7258883248730964,
+   "continuity_relaxed": 0.9137055837563451,
+   "arc_precision": 0.9281767955801105,
+   "arc_recall": 0.7241379310344828,
+   "arc_f1": 0.8135593220338984,
+   "seq_similarity": 0.7813953488372093,
+   "n_pred_arcs": 198,
+   "n_ref_arcs": 232
+  }
+ ]
+}
