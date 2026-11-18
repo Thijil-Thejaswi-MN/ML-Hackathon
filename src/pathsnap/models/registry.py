@@ -1,6 +1,6 @@
 """Model registry.  OWNER: M2.  Each owner adds their model module + one line here.
 
-Planned (README 3.7): logreg(M2) gnb(M3) knn(M2) extratrees(M1) rf(M4) hgb|lightgbm(M2) mlp(M4)
+Implemented: logreg, knn, lightgbm, hgb (M2); extratrees (M1); rf, mlp (M4). (A GNB model was planned but not built.)
 """
 from __future__ import annotations
 import importlib
@@ -18,7 +18,6 @@ REGISTRY: dict[str, str] = {
     "lightgbm": "pathsnap.models.boosting:LightGBMModel",
     "hgb": "pathsnap.models.boosting:HGBModel",          # sklearn histogram GBDT (no extra dependency)
     # M3 models
-    "gnb": "pathsnap.models.gnb:GNBModel",
 }
 
 
